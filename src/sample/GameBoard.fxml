@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ButtonBar?>
+<?import javafx.scene.layout.AnchorPane?>
+
+<AnchorPane prefHeight="960.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sample.GameBoard">
+   <children>
+      <ButtonBar layoutX="189.0" layoutY="919.0" prefHeight="40.0" prefWidth="275.0">
+         <buttons>
+            <Button mnemonicParsing="false" text="Button" />
+            <Button mnemonicParsing="false" text="Button" />
+            <Button mnemonicParsing="false" text="Button" />
+         </buttons>
+      </ButtonBar>
+   </children>
+</AnchorPane>
