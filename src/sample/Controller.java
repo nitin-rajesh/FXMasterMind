@@ -2,19 +2,13 @@ package sample;
 
 import javafx.fxml.FXML;
 import javafx.event.ActionEvent;
-import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
-import javafx.scene.Group;
 import javafx.scene.Node;
-import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.ButtonBar;
-import javafx.scene.control.ToggleButton;
-import javafx.scene.control.ToggleGroup;
-import javafx.scene.control.ToolBar;
-import javafx.scene.layout.*;
-import javafx.scene.paint.Color;
-import javafx.scene.shape.Line;
+import javafx.scene.layout.VBox;
+import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.HBox;
 import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
 
@@ -28,7 +22,7 @@ public class Controller {
     ArrayList<Rectangle> GuessBoxes;
     @FXML
     public void switchScene(ActionEvent e) throws IOException {
-        GameTime instance = new GameTime(8,10);
+        GameTime instance = new GameTime(8,14);
         AnchorPane root = new AnchorPane();
         stage = (Stage) ((Node)e.getSource()).getScene().getWindow();
         VBox grid = instance.initBoxes();

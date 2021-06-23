@@ -5,6 +5,7 @@ import javafx.scene.Group;
 import javafx.scene.control.ToggleButton;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.control.ToolBar;
+import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
@@ -37,16 +38,14 @@ public class GameTime {
         //Group group = new Group();
         grid = new VBox();
         for(int i = 0; i < 2 * numberOfGuesses ; i++){
-            Group group = new Group();
+            GridPane group = new GridPane();
             for(int j = 0; j < variableCount; j++){
                 tempRect = new Rectangle(50,50, Color.GRAY);
                 tempRect.setArcWidth(10);   //rounded corners
                 tempRect.setArcHeight(10);
-                tempRect.setX(sceneWidth - (j%(variableCount/2) + 1) * 55); //x coordinate is set
-                tempRect.setY(i*55 + 5);    //y coordinate is set
                 tempRect.setStroke(Color.TRANSPARENT);
-                group.getChildren().add(tempRect);  //Each rectangle is stored in an Arraylist
-                progressBoxes.add(tempRect);    //Each rectangle is added to a group
+                group.add(tempRect,j%(variableCount/2),(j<variableCount/2)?0:1,1,1);  //Each rectangle is stored in an Arraylist
+                progressBoxes.add(tempRect); //Each rectangle is added to a group
             }
             grid.getChildren().add(group);
         }
