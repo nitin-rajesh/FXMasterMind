@@ -2,14 +2,25 @@ package sample.GameStack;
 
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
+import javafx.geometry.Insets;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
+import javafx.scene.text.Font;
+import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
+import javafx.stage.Window;
 import sample.Controller;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
 
 public class GameTime extends GameBoard{
@@ -47,6 +58,7 @@ public class GameTime extends GameBoard{
             buttons[i].setOnAction(new EventHandler<ActionEvent>() {
                 @Override
                 public void handle(ActionEvent event) {
+                    if(!GameInProgress.victory){
                     GameInProgress.appendEntry(finalI + 1);
                     //System.out.println(finalI + 1);
                     String temp = "";
@@ -76,17 +88,18 @@ public class GameTime extends GameBoard{
                         for(;k < redCount + whiteCount;k++){
                             boxes[k][GameInProgress.currentTurn].setFill(Color.LIGHTGRAY);
                         }
-                        if(GameInProgress.victory){
-                            System.out.println("You WIN!!");
-                        }
+                    }
+                    if(GameInProgress.victory){
+                        System.out.println("You WIN!!");
+                    }
                     }
                 }
             });
         }
     }
     private void initOptionButtons(){
-        List<String> tempList = Arrays.asList("Clear","AI","Answer","Exit");
-        optionButtons = new Button[4];
+        List<String> tempList = Arrays.asList("Clear","AI","Answer");
+        optionButtons = new Button[tempList.size()];
         for(int i = 0; i < tempList.size(); i++){
             optionButtons[i] = new Button(tempList.get(i));
             switch (i){
@@ -103,6 +116,7 @@ public class GameTime extends GameBoard{
                         }
                     });
                     break;
+
                 case 2:
                     optionButtons[i].setOnAction(new EventHandler<ActionEvent>() {
                         @Override

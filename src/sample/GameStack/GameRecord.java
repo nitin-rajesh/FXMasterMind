@@ -3,8 +3,8 @@ import java.lang.Math;
 
 class GameRecord {
     int currentTurn;
-    int currentEntry[];
-    int answer[];
+    int[] currentEntry;
+    int[] answer;
     int iterator;
     int redCount;
     int whiteCount;
@@ -46,21 +46,15 @@ class GameRecord {
     }
     int whiteScan(){
         whiteCount = 0;
-        for(int i = 0; i < answer.length; i++){
-            for(int j = 0; j < currentEntry.length; j++){
-                if(currentEntry[j] == answer[i]){
+        for (int k : answer) {
+            for (int i : currentEntry) {
+                if (i == k) {
                     whiteCount++;
                 }
             }
         }
         whiteCount -= redScan();
         return whiteCount;
-    }
-    void setCurrentEntry(int[] currentEntry1){
-        for(int i = 0; i < currentEntry.length; i++){
-            currentEntry[i] = currentEntry1[i];
-        }
-        currentTurn++;
     }
     void appendEntry(int currentVal){
         if(iterator == currentEntry.length){
