@@ -8,19 +8,16 @@ import javafx.scene.Scene;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.ToolBar;
 import javafx.scene.layout.*;
-import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
 import sample.GameStack.GameTime;
 
 import java.io.IOException;
-import java.util.ArrayList;
 
 public class Controller {
 
-    ArrayList<Rectangle> GuessBoxes;
     @FXML
     public void switchScene(ActionEvent e) throws IOException {
-        GameTime instance = new GameTime(8,16);
+        GameTime instance = new GameTime(4,8);
         AnchorPane root = new AnchorPane();
         Stage stage = (Stage) ((Node) e.getSource()).getScene().getWindow();
         BorderPane borderPane = new BorderPane();   //Main border pane to align all the widgets
