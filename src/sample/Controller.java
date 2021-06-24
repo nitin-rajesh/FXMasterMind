@@ -5,11 +5,9 @@ import javafx.event.ActionEvent;
 import javafx.geometry.Insets;
 import javafx.scene.Node;
 import javafx.scene.Scene;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.control.ToolBar;
-import javafx.scene.layout.VBox;
-import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.HBox;
+import javafx.scene.layout.*;
 import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
 import sample.GameStack.GameTime;
@@ -19,37 +17,41 @@ import java.util.ArrayList;
 
 public class Controller {
 
-    private Stage stage;
-    private Scene scene;
     ArrayList<Rectangle> GuessBoxes;
     @FXML
     public void switchScene(ActionEvent e) throws IOException {
-        GameTime instance = new GameTime(4,8);
+        GameTime instance = new GameTime(8,16);
         AnchorPane root = new AnchorPane();
-        stage = (Stage) ((Node)e.getSource()).getScene().getWindow();
+        Stage stage = (Stage) ((Node) e.getSource()).getScene().getWindow();
         BorderPane borderPane = new BorderPane();   //Main border pane to align all the widgets
+        ScrollPane playArea = new ScrollPane();
+        BorderPane playWidgets = new BorderPane();
         //Grid of squares
-        VBox grid = instance.initBoxes();
+        VBox grid = instance.drawBoxGrid();
         grid.setSpacing(5);
         grid.setPadding(new Insets(5, 5, 0, 5));
-        borderPane.setRight(grid);
-        //Grid of guess buttons
-        HBox bar = instance.initGuessBar();
-        ToolBar baseBar = new ToolBar();
-        BorderPane baseAligner = new BorderPane();
-        baseAligner.setLeft(bar);
-        baseAligner.setRight(instance.initOptionBar());
-        baseBar.getItems().add(baseAligner);
-        borderPane.setBottom(baseBar);
+        playWidgets.setRight(grid);
+        playArea.setContent(playWidgets);
+        playArea.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
+        playArea.setVbarPolicy(ScrollPane.ScrollBarPolicy.ALWAYS);
+        playArea.setPrefHeight(600);
         //Grid of text boxes for guess status
-        VBox textGrid = instance.initTextFields();
+        VBox textGrid = instance.drawTextFields();
         textGrid.setSpacing(81);
         textGrid.setPadding(new Insets(52,20,20,20));
-        borderPane.setLeft(textGrid);
+        playWidgets.setLeft(textGrid);
+        //Grid of guess buttons
+        HBox bar = instance.drawGuessBar();
+        ToolBar baseBar = new ToolBar();
+        //add button grid to base toolbar
+        baseBar.getItems().add(bar);
+        borderPane.setBottom(baseBar);
+        borderPane.setTop(instance.drawOptionBar());
+        borderPane.setCenter(playArea);
         //add the border pane to the anchor
         root.getChildren().add(borderPane);
         //initialise the scene
-        scene = new Scene(root, root.getPrefWidth(), root.getPrefHeight());
+        Scene scene = new Scene(root, root.getPrefWidth(), root.getPrefHeight());
         stage.setScene(scene);
         stage.show();
     }
