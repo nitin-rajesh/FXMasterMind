@@ -1,7 +1,5 @@
 package sample;
 
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.event.ActionEvent;
@@ -11,21 +9,22 @@ import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.*;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import sample.GameStack.GameTime;
-
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.EventListener;
 
-public class Controller {
+public class Controller implements EventListener {
     Parent root;
     Stage stage;
     GameTime instance;
-    int constCount = 8;
-    int varCount = 4;
+    int buffer = 0;
+    boolean acceptKeyStroke = false;
     boolean isRepeat = false;
     @FXML
     ComboBox<String> varCountBox;
@@ -73,13 +72,13 @@ public class Controller {
                     alert.setTitle("End game?");
                     alert.setContentText("Do you want to end this game?");
                     alert.showAndWait();
-                if(alert.getResult() == ButtonType.OK){
-                    try {
-                        start(event);
-                    } catch (Exception exception) {
-                        exception.printStackTrace();
+                    if(alert.getResult() == ButtonType.OK){
+                        try {
+                            start(event);
+                        } catch (Exception exception) {
+                            exception.printStackTrace();
+                        }
                     }
-                }
                 }else{
                     try {
                         start(event);
@@ -96,6 +95,51 @@ public class Controller {
         root.getChildren().add(borderPane);
         //initialise the scene
         Scene scene = new Scene(root, root.getPrefWidth(), root.getPrefHeight());
+        scene.addEventHandler(KeyEvent.KEY_PRESSED,(keyEvent) -> {
+            //System.out.println(keyEvent.getCode().toString());
+            if(keyEvent.getCode().toString().equals("BACK_SPACE")){
+                instance.backSpace();
+            }
+            if(keyEvent.isAltDown()) {
+                try{
+                    if(Integer.parseInt(settings.get(1)) >= buffer*10 + Integer.parseInt(keyEvent.getCode().getChar())){
+                        buffer *= 10;
+                        buffer += Integer.parseInt(keyEvent.getCode().getChar());
+                        //System.out.println("Val" + buffer);
+                            instance.addPseudoEntry(buffer);
+                    }
+                }
+                catch (NumberFormatException exception) {
+                }
+                acceptKeyStroke = false;
+            }
+            else{
+                try {
+                    instance.addEntry(Integer.parseInt(keyEvent.getCode().getChar()) - 1);
+                } catch (NumberFormatException ignored) {
+                }
+            }
+            if(instance.isEndOfGame()){
+                if(keyEvent.getCode().toString() == "ESCAPE"){
+                    try {
+                        start(scene);
+                    } catch (Exception exception) {
+                        exception.printStackTrace();
+                    }
+                }
+            }
+        });
+
+        scene.setOnKeyReleased(keyEvent -> {
+            if(keyEvent.getCode().toString() == "ALT") {
+                try {
+                    instance.addEntry(buffer - 1);
+                } catch (NumberFormatException exception) {
+                }
+                buffer = 0;
+            }
+            acceptKeyStroke = true;
+        });
         stage.setScene(scene);
         stage.show();
     }
@@ -103,6 +147,13 @@ public class Controller {
     public void start(ActionEvent e) throws Exception{
         root = FXMLLoader.load(getClass().getResource("home_page.fxml"));
         stage = (Stage) ((Node) e.getSource()).getScene().getWindow();
+        stage.setTitle("FXMasterMind");
+        stage.setScene(new Scene(root));
+        stage.show();
+    }
+    public void start(Scene scene) throws Exception{
+        root = FXMLLoader.load(getClass().getResource("home_page.fxml"));
+        stage = (Stage) (scene.getWindow());
         stage.setTitle("FXMasterMind");
         stage.setScene(new Scene(root));
         stage.show();
