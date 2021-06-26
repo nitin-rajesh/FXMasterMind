@@ -10,22 +10,24 @@ class GameRecord {
     int whiteCount;
     public boolean isScam;
     boolean victory;
-    GameRecord(int variableCount, int constantCount, boolean noRepeat){
-        generateAnswer(variableCount,constantCount,noRepeat);
+    boolean isRepeat;
+    GameRecord(int variableCount, int constantCount, boolean isRepeat){
+        this.isRepeat = isRepeat;
+        generateAnswer(variableCount,constantCount,isRepeat);
         victory = false;
         isScam = false;
         iterator = 0;
     }
-    void generateAnswer(int variableCount, int constantCount, boolean noRepeat){
+    void generateAnswer(int variableCount, int constantCount, boolean isRepeat){
         answer = new int[variableCount];
         currentEntry = new int[variableCount];
         for(int i = 0; i < variableCount; i++){
             int digit;
             digit = (int)Math.floor(Math.random()*constantCount + 1);
             answer[i] = digit;
-            if(noRepeat){
-                for(int j = 0; j < i; j++){
-                    if(digit == answer[j]){
+            for(int j = 0; j < i; j++){
+                if(digit == answer[j]){
+                    if(!isRepeat){
                         i--;
                     }
                 }
@@ -46,10 +48,11 @@ class GameRecord {
     }
     int whiteScan(){
         whiteCount = 0;
-        for (int k : answer) {
-            for (int i : currentEntry) {
+        for (int k : currentEntry) {
+            for (int i : answer) {
                 if (i == k) {
                     whiteCount++;
+                    break;
                 }
             }
         }

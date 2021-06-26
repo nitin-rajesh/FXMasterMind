@@ -26,18 +26,26 @@ import java.util.Optional;
 public class GameTime extends GameBoard{
     // GameTime class handles variables during gameplay
     GameRecord GameInProgress;
+    boolean endOfGame;
 
-    public GameTime(int variableCount, int constantCount){
-        this.variableCount = variableCount;
-        this.constantCount = constantCount;
+    public GameTime(int varCount, int constCount, boolean isRepeat){
+        endOfGame = false;
+        this.variableCount = (varCount/2)*2;
+        if(!isRepeat && (varCount > constCount))
+            constCount = variableCount;
+        else {
+            constCount = (constCount/2)*2;
+        }
+        this.constantCount = constCount;
         entryBar = new ToolBar[2];
-        numberOfGuesses = 2*variableCount + (constantCount - 8)*2;
-        GameInProgress = new GameRecord(variableCount,constantCount,true);
+        numberOfGuesses = 2*variableCount + (constantCount - 8)*2 + (isRepeat?1:0);
+        GameInProgress = new GameRecord(variableCount,constantCount,isRepeat);
         initAnswerTexts();
         initGuessButtons();
         initOptionButtons();
         initBoxes();
     }
+
     private void initAnswerTexts(){
         answerTexts = new Text[numberOfGuesses];
         String filler = " ";
@@ -58,41 +66,7 @@ public class GameTime extends GameBoard{
             buttons[i].setOnAction(new EventHandler<ActionEvent>() {
                 @Override
                 public void handle(ActionEvent event) {
-                    if(!GameInProgress.victory){
-                    GameInProgress.appendEntry(finalI + 1);
-                    //System.out.println(finalI + 1);
-                    String temp = "";
-                    int k;
-                    //Output formatting statements
-                    for(k = 0; k < GameInProgress.iterator; k++){
-                        if(k > 0){
-                            temp += GameInProgress.currentEntry[k] > 9?" ":"  ";
-                        }
-                        else{
-                            temp += GameInProgress.currentEntry[k] > 9?"":" ";
-                        }
-                        temp += String.valueOf(GameInProgress.currentEntry[k]);
-                    }
-                    while(k < variableCount){
-                        temp +="  *";
-                        k++;
-                    }
-                    temp += "  ";
-                    answerTexts[GameInProgress.currentTurn].setText(temp);
-                    int redCount = GameInProgress.redScan();
-                    int whiteCount = GameInProgress.whiteScan();
-                    if(GameInProgress.iterator == variableCount){
-                        for(k =0; k < redCount; k++){
-                            boxes[k][GameInProgress.currentTurn].setFill(Color.RED);
-                        }
-                        for(;k < redCount + whiteCount;k++){
-                            boxes[k][GameInProgress.currentTurn].setFill(Color.LIGHTGRAY);
-                        }
-                    }
-                    if(GameInProgress.victory){
-                        System.out.println("You WIN!!");
-                    }
-                    }
+                    addEntry(finalI);
                 }
             });
         }
@@ -118,14 +92,21 @@ public class GameTime extends GameBoard{
                     break;
 
                 case 2:
+                    Alert alert = new Alert((Alert.AlertType.NONE));
                     optionButtons[i].setOnAction(new EventHandler<ActionEvent>() {
                         @Override
                         public void handle(ActionEvent event) {
-                            for (int j = 0; j < variableCount; j++)
-                                System.out.println(GameInProgress.answer[j]);
+                            alert.setAlertType(Alert.AlertType.INFORMATION);
+                            String answerStr = "";
+                            for(int k = 0; k < variableCount; k++){
+                                answerStr = answerStr.concat(Integer.toString(GameInProgress.answer[k]) + " ");
+                            }
+                            alert.setTitle("Shhh...");
+                            alert.setContentText("Answer: " + answerStr);
+                            alert.showAndWait();
+                            GameInProgress.isScam = true;
                         }
                     });
-                    break;
             }
         }
     }
@@ -137,7 +118,68 @@ public class GameTime extends GameBoard{
             }
         }
     }
-    public boolean isVictory(){
-        return GameInProgress.victory;
+    public boolean isEndOfGame(){
+        return endOfGame;
+    }
+    public void addEntry(int finalI){
+        if(!endOfGame){
+            GameInProgress.appendEntry(finalI + 1);
+            //System.out.println(finalI + 1);
+            String temp = "";
+            int k;
+            //Output formatting statements
+            for(k = 0; k < GameInProgress.iterator; k++){
+                if(k > 0){
+                    temp += GameInProgress.currentEntry[k] > 9?" ":"  ";
+                }
+                else{
+                    temp += GameInProgress.currentEntry[k] > 9?"":" ";
+                }
+                temp += String.valueOf(GameInProgress.currentEntry[k]);
+            }
+            while(k < variableCount){
+                temp +="  *";
+                k++;
+            }
+            temp += "  ";
+            answerTexts[GameInProgress.currentTurn].setText(temp);
+            int redCount = GameInProgress.redScan();
+            int whiteCount = GameInProgress.whiteScan();
+            if(GameInProgress.iterator == variableCount){
+                for(k =0; k < redCount; k++){
+                    boxes[k][GameInProgress.currentTurn].setFill(Color.RED);
+                }
+                for(;k < redCount + whiteCount;k++){
+                    boxes[k][GameInProgress.currentTurn].setFill(Color.LIGHTGRAY);
+                }
+                if(GameInProgress.victory){
+                    Alert alert = new Alert((Alert.AlertType.NONE));
+                    if(GameInProgress.isScam){
+                        alert.setAlertType(Alert.AlertType.WARNING);
+                        alert.setTitle("Sus");
+                        alert.setContentText("Breach detected");
+                    }
+                    else {
+                        alert.setAlertType(Alert.AlertType.INFORMATION);
+                        alert.setTitle("Congratulations");
+                        alert.setContentText("You WIN !!");
+                    }
+                    endOfGame = true;
+                    alert.showAndWait();
+                }
+                else if(GameInProgress.currentTurn == numberOfGuesses - 1){
+                    endOfGame = true;
+                    Alert alert = new Alert((Alert.AlertType.NONE));
+                    alert.setAlertType(Alert.AlertType.INFORMATION);
+                    String answerStr = "";
+                    for(int x = 0; x < variableCount; x++){
+                        answerStr = answerStr.concat(GameInProgress.answer[x] + " ");
+                    }
+                    alert.setTitle("Uh oh...");
+                    alert.setContentText("Out of turns :(\n Answer- " + answerStr);
+                    alert.showAndWait();
+                }
+            }
+        }
     }
 }
