@@ -129,13 +129,13 @@ public class GameTime extends GameBoard{
             int k;
             //Output formatting statements
             for(k = 0; k < GameInProgress.iterator; k++){
-            if(k > 0){
-                temp += GameInProgress.currentEntry[k] > 9?" ":"  ";
-            }
-            else{
-                temp += GameInProgress.currentEntry[k] > 9?"":" ";
-            }
-            temp += String.valueOf(GameInProgress.currentEntry[k]);
+                if(k > 0){
+                    temp += GameInProgress.currentEntry[k] > 9?" ":"  ";
+                }
+                else{
+                    temp += GameInProgress.currentEntry[k] > 9?"":" ";
+                }
+                temp += String.valueOf(GameInProgress.currentEntry[k]);
             }
             while(k < variableCount){
                 temp +="  *";

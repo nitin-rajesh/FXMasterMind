@@ -67,4 +67,10 @@ class GameRecord {
         currentEntry[iterator] = currentVal;
         iterator++;
     }
+    void resetEntry(){
+        victory = false;
+        isScam = false;
+        iterator = 0;
+        currentTurn = 0;
+    }
 }
