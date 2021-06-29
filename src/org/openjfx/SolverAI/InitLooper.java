@@ -1,4 +1,4 @@
-package sample.SolverAI;
+package org.openjfx.SolverAI;
 
 public class InitLooper extends NNestedForLoop<Void,Boolean> {
     public InitLooper(){
@@ -30,6 +30,7 @@ public class InitLooper extends NNestedForLoop<Void,Boolean> {
     }
     protected void loopBody(){
         if(!isRepeatAllowed && isAnyDimensionSame()){
+
             arr.setAtPosition(currentDimensionPositions,false);
         }
         else {

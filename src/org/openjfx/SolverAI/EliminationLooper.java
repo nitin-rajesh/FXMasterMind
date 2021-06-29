@@ -1,6 +1,7 @@
-package sample.SolverAI;
+package org.openjfx.SolverAI;
 
-import sample.GameStack.ColourComplex;
+import org.openjfx.GameStack.ColorComplex;
+import org.openjfx.GameStack.ColourComplex;
 
 public class EliminationLooper extends NNestedForLoop<Void,Boolean>{
     public EliminationLooper(){
@@ -24,19 +25,19 @@ public class EliminationLooper extends NNestedForLoop<Void,Boolean>{
         return temp;
     }
 
-    public void reset(int[] guess, ColourComplex guessComplex){
-        NNestedForLoop.reset();
+    public void reset(int[] guess, ColorComplex guessComplex){
+        reset();
         this.guess = guess;
         this.guessComplex = guessComplex;
     }
     protected void loopBody(){
         if(arr.getAtPosition(currentDimensionPositions)){
-            ColourComplex c = ColourComplex.generateComplex(currentDimensionPositions,guess,numberOfDimensions);
+            ColorComplex c = ColorComplex.colorCount(currentDimensionPositions,guess);
             //System.out.println(currentDimensionPositions[0] + "  " + currentDimensionPositions[1] + "  " + c.comparison(guessComplex));
             arr.setAtPosition(currentDimensionPositions,(c==guessComplex));
         }
     }
 
     private int[] guess;
-    ColourComplex guessComplex;
+    ColorComplex guessComplex;
 }

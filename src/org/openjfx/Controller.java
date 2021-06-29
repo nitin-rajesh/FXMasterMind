@@ -1,4 +1,4 @@
-package sample;
+package org.openjfx;
 
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
@@ -14,7 +14,7 @@ import javafx.scene.layout.*;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
-import sample.GameStack.GameTime;
+import org.openjfx.GameStack.GameTime;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.EventListener;

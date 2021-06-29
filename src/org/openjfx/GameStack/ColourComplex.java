@@ -1,9 +1,9 @@
-package sample.GameStack;
+package org.openjfx.GameStack;
 
 import java.util.ArrayList;
-
-public class ColourComplex {
-    public ColourComplex(){
+//Replaced class with ColorComplex
+public class ColourComplex extends ColorComplex{
+/*    public ColourComplex(){
         reds = whites = length = 0;
     }
     public ColourComplex(int[] ans, int[] trial, int size){
@@ -80,6 +80,7 @@ public class ColourComplex {
         this.length = size;
     }
     public static ColourComplex generateComplex(int[] ans, int[] trial, int size){
+        //System.out.println(ans.length);
         ColourComplex c = new ColourComplex();
         boolean[] ansMarked = new boolean[size];
         boolean[] trialMarked = new boolean[size];
@@ -117,7 +118,11 @@ public class ColourComplex {
         c.length = size;
         c.reds = reds;
         c.whites = whites;
-        //cout<<reds<<" "<<whites<<endl;
+        //System.out.println("Reds:" + reds + "\tWhites:" + whites);
+        /*for(int r : trial){
+            System.out.print(r);
+        }
+        System.out.println("  R:" + reds + "  W: " + whites);
         return c;
     }
     public static ColourComplex generateComplex(ArrayList<Integer> ans, ArrayList<Integer> trial){
@@ -169,7 +174,5 @@ public class ColourComplex {
         return reds==length;
     }
 
-    private int reds;
-    private int whites;
-    private int length;
+    private int length;*/
 }

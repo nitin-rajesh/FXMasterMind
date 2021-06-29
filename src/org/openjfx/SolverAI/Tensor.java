@@ -1,4 +1,4 @@
-package sample.SolverAI;
+package org.openjfx.SolverAI;
 
 import java.util.ArrayList;
 
@@ -26,7 +26,12 @@ public class Tensor<T> {
             this.dimensions[i] = depthOfDimensions;
             num *= depthOfDimensions;
         }
-        this.data = new ArrayList<>(num);
+        this.data = new ArrayList<>();
+        //System.out.println(this.data.size());
+        for(int i = 0; i < num; i++){
+            data.add(null);
+        }
+        //System.out.println(this.data.size());
         this.actualSize = num;
     }
 
@@ -40,13 +45,14 @@ public class Tensor<T> {
         return data.get(actualPosition);
     }
     void setAtPosition(int[] pos, T val){
-        System.out.println(numberOfDimensions);
         int actualPosition = pos[numberOfDimensions - 1];
         int multiplier = dimensions[numberOfDimensions - 1];
         for(int i = numberOfDimensions - 2; i >=0; i--){
             actualPosition += multiplier * pos[i];
             multiplier *= dimensions[i];
         }
+        //System.out.println(pos.length);
+        //System.out.println(data.size());
         data.set(actualPosition,val);
     }
     private ArrayList<T> data;

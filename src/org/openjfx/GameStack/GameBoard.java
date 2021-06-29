@@ -1,4 +1,4 @@
-package sample.GameStack;
+package org.openjfx.GameStack;
 
 import javafx.geometry.Insets;
 import javafx.scene.control.Button;

@@ -1,4 +1,4 @@
-package sample.SolverAI;
+package org.openjfx.SolverAI;
 
 
 abstract class NNestedForLoop<ReturnType,ArrayType> {

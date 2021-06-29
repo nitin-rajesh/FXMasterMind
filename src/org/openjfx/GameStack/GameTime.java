@@ -1,26 +1,15 @@
-package sample.GameStack;
+package org.openjfx.GameStack;
 
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
-import javafx.geometry.Insets;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.control.*;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
-import javafx.scene.text.Font;
-import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
-import javafx.stage.Modality;
-import javafx.stage.Stage;
-import javafx.stage.Window;
-import sample.Controller;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Optional;
 
 
 public class GameTime extends GameBoard{
@@ -30,16 +19,18 @@ public class GameTime extends GameBoard{
 
     public GameTime(int varCount, int constCount, boolean isRepeat){
         endOfGame = false;
-        this.variableCount = (varCount/2)*2;
+        varCount = (varCount/2)*2;
         if(!isRepeat && (varCount > constCount))
-            constCount = variableCount;
+            constCount = varCount;
         else {
             constCount = (constCount/2)*2;
         }
-        this.constantCount = constCount;
+        GameInProgress = new GameRecord(varCount,constCount,isRepeat);
+
         entryBar = new ToolBar[2];
-        numberOfGuesses = 2*variableCount + (constantCount - 8)*2 + (isRepeat?1:0);
-        GameInProgress = new GameRecord(variableCount,constantCount,isRepeat);
+        numberOfGuesses = 2*GameInProgress.numberOfColumns + (GameInProgress.numberOfColors - 8)*2 + (isRepeat?1:0);
+        variableCount = varCount;
+        constantCount = constCount;
         initAnswerTexts();
         initGuessButtons();
         initOptionButtons();
@@ -49,7 +40,7 @@ public class GameTime extends GameBoard{
     private void initAnswerTexts(){
         answerTexts = new Text[numberOfGuesses];
         String filler = " ";
-        for(int j = 0; j < variableCount; j++){
+        for(int j = 0; j < GameInProgress.numberOfColumns; j++){
             filler = filler.concat("*  ");
         }
         for(int i = 0; i < numberOfGuesses; i++){
@@ -58,8 +49,8 @@ public class GameTime extends GameBoard{
         }
     }
     private void initGuessButtons(){
-        buttons = new Button[constantCount];
-        for(int i = 0; i < constantCount; i++){
+        buttons = new Button[GameInProgress.numberOfColors];
+        for(int i = 0; i < GameInProgress.numberOfColors; i++){
             buttons[i] = new Button();
             buttons[i].setText(Integer.toString(i + 1));
             int finalI = i;
@@ -72,7 +63,7 @@ public class GameTime extends GameBoard{
         }
     }
     private void initOptionButtons(){
-        List<String> tempList = Arrays.asList("Clear","AI","Answer");
+        List<String> tempList = Arrays.asList("Clear","Answer","AI");
         optionButtons = new Button[tempList.size()];
         for(int i = 0; i < tempList.size(); i++){
             optionButtons[i] = new Button(tempList.get(i));
@@ -82,7 +73,7 @@ public class GameTime extends GameBoard{
                         @Override
                         public void handle(ActionEvent event) {
                             String filler = " ";
-                            for(int j = 0; j < variableCount; j++){
+                            for(int j = 0; j < GameInProgress.numberOfColumns; j++){
                                 filler = filler.concat("*  ");
                             }
                             answerTexts[GameInProgress.currentTurn].setText(filler);
@@ -91,14 +82,14 @@ public class GameTime extends GameBoard{
                     });
                     break;
 
-                case 2:
+                case 1:
                     Alert alert = new Alert((Alert.AlertType.NONE));
                     optionButtons[i].setOnAction(new EventHandler<ActionEvent>() {
                         @Override
                         public void handle(ActionEvent event) {
                             alert.setAlertType(Alert.AlertType.INFORMATION);
                             String answerStr = "";
-                            for(int k = 0; k < variableCount; k++){
+                            for(int k = 0; k < GameInProgress.numberOfColumns; k++){
                                 answerStr = answerStr.concat(Integer.toString(GameInProgress.answer[k]) + " ");
                             }
                             alert.setTitle("Shhh...");
@@ -107,13 +98,42 @@ public class GameTime extends GameBoard{
                             GameInProgress.isScam = true;
                         }
                     });
+                    break;
+                case 2:
+                    optionButtons[i].setOnAction(new EventHandler<ActionEvent>() {
+                        @Override
+                        public void handle(ActionEvent event) {
+                            ArrayList<int[]> answerVector = new ArrayList<>();
+                            Solver aiSolver = new Solver(GameInProgress.answer,GameInProgress.numberOfColumns,GameInProgress.numberOfColors,GameInProgress.isRepeat,true);
+                            aiSolver.solve();
+                            answerVector = aiSolver.guessGuesses();
+                            for(int row = 0; row < answerVector.size(); row++){
+                                for(int val: answerVector.get(row)){
+                                    System.out.print(val + " ");
+                                }
+                                System.out.println();
+                            }
+                        }
+                    });
+                    break;
+                    /*ArrayList<int[]> answerList = new ArrayList<>();
+                    Solver AISolver = new Solver(GameInProgress.answer,GameInProgress.numberOfRows,GameInProgress.numberOfColors, GameInProgress.isRepeat,false);
+                    AISolver.solve();
+                    answerList = AISolver.guessGuesses();
+                    for(int guessLine = 0; guessLine < answerList.size(); guessLine++){
+                        for(int num : answerList.get(guessLine)){
+                            System.out.print(num + "  ");
+                        }
+                        System.out.println("");
+                    }
+                    break;*/
             }
         }
     }
     private void initBoxes(){
-        boxes = new Rectangle[variableCount][numberOfGuesses];
+        boxes = new Rectangle[GameInProgress.numberOfColumns][numberOfGuesses];
         for(int i = 0; i < numberOfGuesses ; i++){
-            for(int j = 0; j < variableCount; j++){
+            for(int j = 0; j < GameInProgress.numberOfColumns; j++){
                 boxes[j][i] = new Rectangle(50,50, Color.GRAY);
             }
         }
@@ -137,15 +157,15 @@ public class GameTime extends GameBoard{
                 }
                 temp += String.valueOf(GameInProgress.currentEntry[k]);
             }
-            while(k < variableCount){
+            while(k < GameInProgress.numberOfColumns){
                 temp +="  *";
                 k++;
             }
             temp += "  ";
             answerTexts[GameInProgress.currentTurn].setText(temp);
-            int redCount = GameInProgress.redScan();
-            int whiteCount = GameInProgress.whiteScan();
-            if (GameInProgress.iterator == variableCount) {
+            int redCount = GameInProgress.countReds();
+            int whiteCount = GameInProgress.countWhites();
+            if (GameInProgress.iterator == GameInProgress.numberOfColumns) {
                 for (k = 0; k < redCount; k++) {
                     boxes[k][GameInProgress.currentTurn].setFill(Color.RED);
                 }
@@ -170,7 +190,7 @@ public class GameTime extends GameBoard{
                     Alert alert = new Alert((Alert.AlertType.NONE));
                     alert.setAlertType(Alert.AlertType.INFORMATION);
                     String answerStr = "";
-                    for (int x = 0; x < variableCount; x++) {
+                    for (int x = 0; x < GameInProgress.numberOfColumns; x++) {
                         answerStr = answerStr.concat(GameInProgress.answer[x] + " ");
                     }
                     alert.setTitle("Uh oh...");
@@ -193,15 +213,17 @@ public class GameTime extends GameBoard{
                     }
                     temp += String.valueOf(GameInProgress.currentEntry[k]);
                 }
-                while (k < variableCount) {
+                while (k < GameInProgress.numberOfColumns) {
                     temp += "  *";
                     k++;
                 }
+                temp += "  ";
             }
             else {
-                temp = " *  *  *  *";
+                temp = " ";
+                for(int i = 0; i < GameInProgress.numberOfColumns; i++)
+                    temp += "*  ";
             }
-            temp += "  ";
             answerTexts[GameInProgress.currentTurn].setText(temp);
             GameInProgress.iterator--;
 
@@ -221,7 +243,7 @@ public class GameTime extends GameBoard{
                 }
                 temp += String.valueOf(GameInProgress.currentEntry[k]);
             }
-            while (k < variableCount) {
+            while (k < GameInProgress.numberOfColumns) {
                 temp += "  *";
                 k++;
             }

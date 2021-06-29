@@ -1,4 +1,4 @@
-package sample;
+package org.openjfx;
 
 import java.io.File;
 import java.io.FileReader;

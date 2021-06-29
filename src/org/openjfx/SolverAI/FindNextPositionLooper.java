@@ -1,4 +1,4 @@
-package sample.SolverAI;
+package org.openjfx.SolverAI;
 
 public class FindNextPositionLooper extends NNestedForLoop<int[],Boolean>{
     public FindNextPositionLooper(Tensor<Boolean> arr, int numberOfDimensions, int depthOfDimensions, boolean isRepeatAllowed, boolean randomStart){
@@ -51,7 +51,7 @@ public class FindNextPositionLooper extends NNestedForLoop<int[],Boolean>{
             return;
         }
         for(int i = 0; i < numberOfDimensions; i++){
-            internalCurrentDimensionPositions[i] = (int)Math.floor(Math.random()*depthOfDimensions);
+            internalCurrentDimensionPositions[i] = (int)Math.floor(Math.random()*depthOfDimensions + 1);
 
             if(!isRepeatAllowed){
                 for(int j = 0; j < i;j++){

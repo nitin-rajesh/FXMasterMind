@@ -1,9 +1,12 @@
-package sample.GameStack;
-import sample.SolverAI.*;
+package org.openjfx.GameStack;
+import org.openjfx.SolverAI.EliminationLooper;
+import org.openjfx.SolverAI.FindNextPositionLooper;
+import org.openjfx.SolverAI.InitLooper;
+import org.openjfx.SolverAI.Tensor;
 
 import java.util.ArrayList;
 
-public class Solver {
+public class Solver extends ColorComplex{
     public Solver(){
         guesses = new ArrayList<>();
     }
@@ -17,7 +20,6 @@ public class Solver {
     }
     void solve(){
         Tensor<Boolean> possibleSolutions = new Tensor<>(numberOfDimensions,depthOfDimensions);
-        ColourComplex answerComplex = ColourComplex.generateComplex(answer,answer,numberOfDimensions);
         int[] guess;
         InitLooper init = new InitLooper(possibleSolutions,numberOfDimensions,depthOfDimensions,isRepeatAllowed);
         init.loop();
@@ -32,8 +34,9 @@ public class Solver {
             next.loop();
             guess = next.getResult();
             guesses.add(copy(guess));
-            ColourComplex guessComplex = ColourComplex.generateComplex(answer,guess,numberOfDimensions);
-            if(guessComplex == answerComplex){
+            //System.out.println(guess.length);
+            ColorComplex guessComplex = ColourComplex.colorCount(answer,guess);
+            if(guessComplex.reds == numberOfDimensions){
                 System.out.print("The Ans is: ");
                 for(int i = 0;i < numberOfDimensions;++i){
                     System.out.println(guess[i]);
@@ -50,7 +53,7 @@ public class Solver {
             elim.loop();
 
             ++count;
-            if(count>=10){
+            if(count>=100){
                 break;
             }
 

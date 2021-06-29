@@ -1,4 +1,4 @@
-package sample.SolverAI;
+package org.openjfx.SolverAI;
 
 public abstract class Looper<ReturnType>{
     public abstract void loop();
