@@ -24,6 +24,7 @@ class GameBoard{
     Text[] answerTexts;
     Button[] optionButtons;
     Rectangle[][] boxes;
+    Text infoText;
 
     public VBox drawBoxGrid(){
         //Group group = new Group();

@@ -6,7 +6,7 @@ import javafx.scene.control.*;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
-import sample.SolverStack.MiniSolver;
+import sample.SolverStack.*;
 
 import java.util.Arrays;
 import java.util.List;
@@ -14,11 +14,13 @@ import java.util.List;
 
 public class GameTime extends GameBoard{
     // GameTime class handles variables during gameplay
+    MiniSolver aiSolver;
     GameRecord GameInProgress;
     boolean endOfGame;
-
+    boolean isAI;
     public GameTime(int varCount, int constCount, boolean isRepeat){
         endOfGame = false;
+        isAI = false;
         varCount = (varCount/2)*2;
         if(!isRepeat && (varCount > constCount))
             constCount = varCount;
@@ -26,7 +28,7 @@ public class GameTime extends GameBoard{
             constCount = (constCount/2)*2;
         }
         GameInProgress = new GameRecord(varCount,constCount,isRepeat);
-
+        aiSolver = new OctaSolver(GameInProgress);
         entryBar = new ToolBar[2];
         numberOfGuesses = GameInProgress.numberOfGuesses;
         variableCount = varCount;
@@ -63,9 +65,11 @@ public class GameTime extends GameBoard{
         }
     }
     private void initOptionButtons(){
-        List<String> tempList = Arrays.asList("Clear","Answer","AI");
+        List<String> tempList = Arrays.asList("Clear","Answer","AI solve");
         optionButtons = new Button[tempList.size()];
         for(int i = 0; i < tempList.size(); i++){
+            if(i == 2 && ((GameInProgress.numberOfColumns >= 8 && GameInProgress.numberOfColors > 10)|| GameInProgress.numberOfColors > 16))
+                break;
             optionButtons[i] = new Button(tempList.get(i));
             switch (i){
                 case 0:
@@ -103,11 +107,16 @@ public class GameTime extends GameBoard{
                     optionButtons[i].setOnAction(new EventHandler<ActionEvent>() {
                         @Override
                         public void handle(ActionEvent event) {
-                            MiniSolver aiSolver = new MiniSolver(GameInProgress);
+                            resetGame();
+                            isAI = true;
+                            //MiniSolver aiSolver = new QuattroSolver(GameInProgress);
                             for(int i = 0; i < GameInProgress.numberOfGuesses - 1; i++){
-                                if(aiSolver.rowGuesser(i)){
+                                int[] guess = aiSolver.rowGuesser(i);
+                                for(int entry: guess){
+                                    addEntry(entry - 1);
+                                }
+                                if(GameInProgress.victory)
                                     break;
-                                };
                             }
                         }
                     });
@@ -150,6 +159,7 @@ public class GameTime extends GameBoard{
             temp.append("  ");
             answerTexts[GameInProgress.currentTurn].setText(temp.toString());
             if (GameInProgress.iterator == GameInProgress.numberOfColumns) {
+                System.out.println(Arrays.toString(aiSolver.rowGuesser(GameInProgress.currentTurn)));
                 int redCount = GameInProgress.countReds();
                 int whiteCount = GameInProgress.countWhites();
                 for (k = 0; k < redCount; k++) {
@@ -166,8 +176,14 @@ public class GameTime extends GameBoard{
                         alert.setContentText("Breach detected");
                     } else {
                         alert.setAlertType(Alert.AlertType.INFORMATION);
-                        alert.setTitle("Congratulations");
-                        alert.setContentText("You WIN !!");
+                        if(isAI){
+                            alert.setTitle("Guess what");
+                            alert.setContentText("I WIN !!");
+                        }
+                        else {
+                            alert.setTitle("Congratulations");
+                            alert.setContentText("You WIN !!");
+                        }
                     }
                     endOfGame = true;
                     alert.showAndWait();
@@ -237,5 +253,28 @@ public class GameTime extends GameBoard{
             GameInProgress.iterator--;
             answerTexts[GameInProgress.currentTurn].setText(temp);
         }
+    }
+    void resetGame(){
+        String filler = " ";
+        for(int j = 0; j < GameInProgress.numberOfColumns; j++){
+            filler = filler.concat("*  ");
+        }
+        for(int i = 0; i < numberOfGuesses; i++){
+            answerTexts[i].setText(filler);
+        }
+
+        for(int i = 0; i < GameInProgress.numberOfColors; i++){
+            buttons[i] = new Button();
+            buttons[i].setText(Integer.toString(i + 1));
+            int finalI = i;
+            buttons[i].setOnAction(new EventHandler<ActionEvent>() {
+                @Override
+                public void handle(ActionEvent event) {
+                    addEntry(finalI);
+                }
+            });
+        }
+
+        GameInProgress.resetEntry();
     }
 }

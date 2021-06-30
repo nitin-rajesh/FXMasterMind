@@ -13,7 +13,7 @@ public class GameRecord extends ColorComplex{
     int iterator = 0;
     public boolean isScam;
     public boolean victory;
-    boolean isRepeat;
+    public final boolean isRepeat;
     public int[][] board;
     public GameRecord(int variableCount, int constantCount, boolean isRepeat){
         this.numberOfColumns = variableCount;
