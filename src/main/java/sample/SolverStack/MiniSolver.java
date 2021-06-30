@@ -40,3 +40,4 @@ abstract public class MiniSolver {
         return(c.reds == solvable.countReds(row) && c.whites == solvable.countWhites(row));
     }
 }
+

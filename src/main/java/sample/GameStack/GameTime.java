@@ -19,6 +19,7 @@ public class GameTime extends GameBoard {
     boolean endOfGame;
     boolean isAI;
     boolean showClues;
+    String clueArray;
     public GameTime(int varCount, int constCount, boolean isRepeat){
         endOfGame = false;
         isAI = false;
@@ -30,12 +31,7 @@ public class GameTime extends GameBoard {
             constCount = (constCount/2)*2;
         }
         GameInProgress = new GameRecord(varCount,constCount,isRepeat);
-        if(varCount == 8 && constCount == 8)
-            aiSolver = new OctaSolver(GameInProgress);
-        else if(varCount == 6)
-            aiSolver = new HexaSolver(GameInProgress);
-        else if(varCount == 4)
-            aiSolver = new QuattroSolver(GameInProgress);
+        aiSolver = theRightSolver(GameInProgress.numberOfColumns);
         entryBar = new ToolBar[2];
         numberOfGuesses = GameInProgress.numberOfGuesses;
         variableCount = varCount;
@@ -44,6 +40,31 @@ public class GameTime extends GameBoard {
         initGuessButtons();
         initOptionButtons();
         initBoxes();
+    }
+
+    MiniSolver theRightSolver(int varCount){
+        if(isWithinLimits())
+            switch (varCount){
+                case 8:
+                    return new OctaSolver(GameInProgress);
+                case 6:
+                    return new HexaSolver(GameInProgress);
+                case 4:
+                    return new QuattroSolver(GameInProgress);
+            }
+        return null;
+    }
+
+    boolean isWithinLimits(){
+        if(GameInProgress.numberOfColumns > 8)
+            return false;
+        if(GameInProgress.numberOfColumns == 8 && GameInProgress.numberOfColors > 8)
+            return false;
+        if(GameInProgress.numberOfColumns == 6 && GameInProgress.numberOfColumns > 14)
+            return false;
+        if(GameInProgress.numberOfColumns == 4 && GameInProgress.numberOfColumns > 16)
+            return false;
+        return true;
     }
 
     private void initAnswerTexts(){
@@ -73,6 +94,9 @@ public class GameTime extends GameBoard {
     }
     private void initOptionButtons(){
         List<String> tempList = Arrays.asList("Clear","AI","Clue");
+        if(!isWithinLimits()){
+            tempList = Arrays.asList("Clear");
+        }
         optionButtons = new Button[tempList.size()];
         for(int i = 0; i < tempList.size(); i++){
             optionButtons[i] = new Button(tempList.get(i));
@@ -82,12 +106,14 @@ public class GameTime extends GameBoard {
                     optionButtons[i].setOnAction(new EventHandler<ActionEvent>() {
                         @Override
                         public void handle(ActionEvent event) {
-                            String filler = " ";
-                            for(int j = 0; j < GameInProgress.numberOfColumns; j++){
-                                filler = filler.concat("*  ");
+                            if(!endOfGame) {
+                                String filler = " ";
+                                for (int j = 0; j < GameInProgress.numberOfColumns; j++) {
+                                    filler = filler.concat("*  ");
+                                }
+                                answerTexts[GameInProgress.currentTurn].setText(filler);
+                                GameInProgress.iterator = 0;
                             }
-                            answerTexts[GameInProgress.currentTurn].setText(filler);
-                            GameInProgress.iterator = 0;
                         }
                     });
                     break;
@@ -99,11 +125,7 @@ public class GameTime extends GameBoard {
                             if(!endOfGame) {
                                 resetGame();
                                 isAI = true;
-                                MiniSolver instanceSolver;
-                                if(GameInProgress.numberOfColumns == 6)
-                                    instanceSolver = new HexaSolver(GameInProgress);
-                                else
-                                    instanceSolver = new QuattroSolver(GameInProgress);
+                                MiniSolver instanceSolver = theRightSolver(GameInProgress.numberOfColumns);
                                 for (int i = 0; i < GameInProgress.numberOfGuesses - 1; i++) {
                                 int[] guess = instanceSolver.rowGuesser(i);
                                 for (int entry : guess) {
@@ -176,12 +198,14 @@ public class GameTime extends GameBoard {
             }
             temp.append("  ");
             answerTexts[GameInProgress.currentTurn].setText(temp.toString());
+            if(showClues)
+                infoText.setText(clueArray + "\nTry this");
             if (GameInProgress.iterator == GameInProgress.numberOfColumns) {
                 //System.out.println(aiSolver.rowGuesser(GameInProgress.currentTurn));
-                if(!isAI){
-                    String clue = Arrays.toString(aiSolver.rowGuesser(GameInProgress.currentTurn));
+                if(!isAI && isWithinLimits()){
+                    clueArray = Arrays.toString(aiSolver.rowGuesser(GameInProgress.currentTurn));
                     if(showClues)
-                        infoText.setText(clue + "\nTry this");
+                        infoText.setText(clueArray + "\nTry this");
                 }
                 int redCount = GameInProgress.countReds();
                 int whiteCount = GameInProgress.countWhites();

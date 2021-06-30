@@ -28,7 +28,7 @@ public class Controller implements EventListener {
     CheckBox boolRepBox = new CheckBox();
     @FXML
     public void switchScene(ActionEvent e) throws IOException {
-        System.out.println("Start");
+        //System.out.println("Start");
         ArrayList<String> settings = FileOps.readValues();
         instance = new GameTime(Integer.parseInt(settings.get(0)),Integer.parseInt((settings.get(1))), !settings.get(2).equals("0"));
         AnchorPane root = new AnchorPane();
@@ -91,7 +91,7 @@ public class Controller implements EventListener {
         //initialise the scene
         Scene scene = new Scene(root, baseBar.getPrefWidth(), root.getPrefHeight());
         scene.addEventHandler(KeyEvent.KEY_PRESSED,(keyEvent) -> {
-            System.out.println(keyEvent.getCode().toString());
+            //System.out.println(keyEvent.getCode().toString());
             if(keyEvent.isAltDown() && keyEvent.isShiftDown() && keyEvent.getCode().toString().equals("A")){
                 instance.showAnswerPopUp();
             }
