@@ -16,6 +16,7 @@ import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import sample.GameStack.GameTime;
 import java.io.IOException;
+import java.security.Key;
 import java.util.ArrayList;
 import java.util.EventListener;
 
@@ -88,8 +89,12 @@ public class Controller implements EventListener {
         //add the border pane to the anchor
         root.getChildren().add(borderPane);
         //initialise the scene
-        Scene scene = new Scene(root, root.getPrefWidth(), root.getPrefHeight());
+        Scene scene = new Scene(root, baseBar.getPrefWidth(), root.getPrefHeight());
         scene.addEventHandler(KeyEvent.KEY_PRESSED,(keyEvent) -> {
+            System.out.println(keyEvent.getCode().toString());
+            if(keyEvent.isAltDown() && keyEvent.isShiftDown() && keyEvent.getCode().toString().equals("A")){
+                instance.showAnswerPopUp();
+            }
             //System.out.println(keyEvent.getCode().toString());
             if(keyEvent.getCode().toString().equals("BACK_SPACE")){
                 instance.backSpace();
@@ -167,7 +172,7 @@ public class Controller implements EventListener {
         ComboBox<String> varCountBox = new ComboBox<>();
         ComboBox<String> constCountBox = new ComboBox<>();
         varCountBox.getItems().addAll("4","6","8");
-        constCountBox.getItems().addAll("8","10","12","16");
+        constCountBox.getItems().addAll("8","10","12","14");
         boolRepBox = new CheckBox();
         boolRepBox.setText("Enable repetitions");
         varCountBox.setPrefSize(100,20);
