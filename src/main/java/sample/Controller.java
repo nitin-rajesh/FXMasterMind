@@ -1,4 +1,4 @@
-package org.openjfx;
+package sample;
 
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
@@ -14,26 +14,20 @@ import javafx.scene.layout.*;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
-import org.openjfx.GameStack.GameTime;
+import sample.GameStack.GameTime;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.EventListener;
 
 public class Controller implements EventListener {
-    Parent root;
     Stage stage;
     GameTime instance;
     int buffer = 0;
     boolean acceptKeyStroke = false;
-    boolean isRepeat = false;
-    @FXML
-    ComboBox<String> varCountBox;
-    @FXML
-    ComboBox<String> constCountBox;
-    @FXML
     CheckBox boolRepBox = new CheckBox();
     @FXML
     public void switchScene(ActionEvent e) throws IOException {
+        System.out.println("Start");
         ArrayList<String> settings = FileOps.readValues();
         instance = new GameTime(Integer.parseInt(settings.get(0)),Integer.parseInt((settings.get(1))), !settings.get(2).equals("0"));
         AnchorPane root = new AnchorPane();
@@ -145,14 +139,14 @@ public class Controller implements EventListener {
     }
 
     public void start(ActionEvent e) throws Exception{
-        root = FXMLLoader.load(getClass().getResource("home_page.fxml"));
+        Parent root = FXMLLoader.load(getClass().getResource("/home_page.fxml"));
         stage = (Stage) ((Node) e.getSource()).getScene().getWindow();
         stage.setTitle("FXMasterMind");
         stage.setScene(new Scene(root));
         stage.show();
     }
     public void start(Scene scene) throws Exception{
-        root = FXMLLoader.load(getClass().getResource("home_page.fxml"));
+        Parent root = FXMLLoader.load(getClass().getResource("/home_page.fxml"));
         stage = (Stage) (scene.getWindow());
         stage.setTitle("FXMasterMind");
         stage.setScene(new Scene(root));

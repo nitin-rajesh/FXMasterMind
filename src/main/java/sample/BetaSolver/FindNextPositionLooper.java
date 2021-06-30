@@ -1,4 +1,4 @@
-package org.openjfx.SolverAI;
+package sample.BetaSolver;
 
 public class FindNextPositionLooper extends NNestedForLoop<int[],Boolean>{
     public FindNextPositionLooper(Tensor<Boolean> arr, int numberOfDimensions, int depthOfDimensions, boolean isRepeatAllowed, boolean randomStart){

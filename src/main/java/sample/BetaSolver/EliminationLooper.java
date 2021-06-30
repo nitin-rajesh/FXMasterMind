@@ -1,7 +1,6 @@
-package org.openjfx.SolverAI;
+package sample.BetaSolver;
 
-import org.openjfx.GameStack.ColorComplex;
-import org.openjfx.GameStack.ColourComplex;
+import sample.GameStack.ColorComplex;
 
 public class EliminationLooper extends NNestedForLoop<Void,Boolean>{
     public EliminationLooper(){

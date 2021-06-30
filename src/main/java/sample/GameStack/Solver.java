@@ -1,8 +1,8 @@
-package org.openjfx.GameStack;
-import org.openjfx.SolverAI.EliminationLooper;
-import org.openjfx.SolverAI.FindNextPositionLooper;
-import org.openjfx.SolverAI.InitLooper;
-import org.openjfx.SolverAI.Tensor;
+package sample.GameStack;
+import sample.BetaSolver.EliminationLooper;
+import sample.BetaSolver.FindNextPositionLooper;
+import sample.BetaSolver.InitLooper;
+import sample.BetaSolver.Tensor;
 
 import java.util.ArrayList;
 
@@ -35,7 +35,7 @@ public class Solver extends ColorComplex{
             guess = next.getResult();
             guesses.add(copy(guess));
             //System.out.println(guess.length);
-            ColorComplex guessComplex = ColourComplex.colorCount(answer,guess);
+            ColorComplex guessComplex = colorCount(answer,guess);
             if(guessComplex.reds == numberOfDimensions){
                 System.out.print("The Ans is: ");
                 for(int i = 0;i < numberOfDimensions;++i){

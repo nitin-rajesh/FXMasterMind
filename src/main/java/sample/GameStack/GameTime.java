@@ -1,4 +1,4 @@
-package org.openjfx.GameStack;
+package sample.GameStack;
 
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -6,8 +6,8 @@ import javafx.scene.control.*;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
+import sample.SolverStack.MiniSolver;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -28,7 +28,7 @@ public class GameTime extends GameBoard{
         GameInProgress = new GameRecord(varCount,constCount,isRepeat);
 
         entryBar = new ToolBar[2];
-        numberOfGuesses = 2*GameInProgress.numberOfColumns + (GameInProgress.numberOfColors - 8)*2 + (isRepeat?1:0);
+        numberOfGuesses = GameInProgress.numberOfGuesses;
         variableCount = varCount;
         constantCount = constCount;
         initAnswerTexts();
@@ -103,30 +103,15 @@ public class GameTime extends GameBoard{
                     optionButtons[i].setOnAction(new EventHandler<ActionEvent>() {
                         @Override
                         public void handle(ActionEvent event) {
-                            ArrayList<int[]> answerVector = new ArrayList<>();
-                            Solver aiSolver = new Solver(GameInProgress.answer,GameInProgress.numberOfColumns,GameInProgress.numberOfColors,GameInProgress.isRepeat,true);
-                            aiSolver.solve();
-                            answerVector = aiSolver.guessGuesses();
-                            for(int row = 0; row < answerVector.size(); row++){
-                                for(int val: answerVector.get(row)){
-                                    System.out.print(val + " ");
-                                }
-                                System.out.println();
+                            MiniSolver aiSolver = new MiniSolver(GameInProgress);
+                            for(int i = 0; i < GameInProgress.numberOfGuesses - 1; i++){
+                                if(aiSolver.rowGuesser(i)){
+                                    break;
+                                };
                             }
                         }
                     });
                     break;
-                    /*ArrayList<int[]> answerList = new ArrayList<>();
-                    Solver AISolver = new Solver(GameInProgress.answer,GameInProgress.numberOfRows,GameInProgress.numberOfColors, GameInProgress.isRepeat,false);
-                    AISolver.solve();
-                    answerList = AISolver.guessGuesses();
-                    for(int guessLine = 0; guessLine < answerList.size(); guessLine++){
-                        for(int num : answerList.get(guessLine)){
-                            System.out.print(num + "  ");
-                        }
-                        System.out.println("");
-                    }
-                    break;*/
             }
         }
     }
@@ -141,31 +126,32 @@ public class GameTime extends GameBoard{
     public boolean isEndOfGame(){
         return endOfGame;
     }
+
     public void addEntry(int finalI){
         if(!endOfGame){
             GameInProgress.appendEntry(finalI + 1);
             //System.out.println(finalI + 1);
-            String temp = "";
+            StringBuilder temp = new StringBuilder();
             int k;
             //Output formatting statements
             for(k = 0; k < GameInProgress.iterator; k++){
                 if(k > 0){
-                    temp += GameInProgress.currentEntry[k] > 9?" ":"  ";
+                    temp.append(GameInProgress.currentEntry[k] > 9 ? " " : "  ");
                 }
                 else{
-                    temp += GameInProgress.currentEntry[k] > 9?"":" ";
+                    temp.append(GameInProgress.currentEntry[k] > 9 ? "" : " ");
                 }
-                temp += String.valueOf(GameInProgress.currentEntry[k]);
+                temp.append(String.valueOf(GameInProgress.currentEntry[k]));
             }
             while(k < GameInProgress.numberOfColumns){
-                temp +="  *";
+                temp.append("  *");
                 k++;
             }
-            temp += "  ";
-            answerTexts[GameInProgress.currentTurn].setText(temp);
-            int redCount = GameInProgress.countReds();
-            int whiteCount = GameInProgress.countWhites();
+            temp.append("  ");
+            answerTexts[GameInProgress.currentTurn].setText(temp.toString());
             if (GameInProgress.iterator == GameInProgress.numberOfColumns) {
+                int redCount = GameInProgress.countReds();
+                int whiteCount = GameInProgress.countWhites();
                 for (k = 0; k < redCount; k++) {
                     boxes[k][GameInProgress.currentTurn].setFill(Color.RED);
                 }

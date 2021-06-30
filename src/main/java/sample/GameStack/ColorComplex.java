@@ -1,8 +1,8 @@
-package org.openjfx.GameStack;
+package sample.GameStack;
 
 public class ColorComplex {
-    int reds;
-    int whites;
+    public int reds;
+    public int whites;
     int redScan(int[] answer, int[] currentEntry){
         reds = 0;
         for(int i = 0; i < answer.length; i++){
@@ -35,8 +35,28 @@ public class ColorComplex {
     }
     public static ColorComplex colorCount(int[] answer, int[] guess){
         ColorComplex temp = new ColorComplex();
-        temp.reds = temp.redScan(answer,guess);
-        temp.whites = temp.whiteScan(answer,guess);
+        int red = 0;
+        for(int i = 0; i < answer.length; i++){
+            if(answer[i] == guess[i]){
+                red++;
+            }
+        }
+        int white = 0;
+        boolean[] ansMarked = new boolean[answer.length];
+        for (int k = 0; k < guess.length; k++) {
+            for (int i = 0; i < answer.length; i++) {
+                if(ansMarked[i])
+                    continue;
+                if (answer[i] == guess[k] && !ansMarked[i]) {
+                    white++;
+                    ansMarked[i] = true;
+                    break;
+                }
+            }
+        }
+        white -= red;
+        temp.reds = red;
+        temp.whites = white;
         return temp;
     }
 }

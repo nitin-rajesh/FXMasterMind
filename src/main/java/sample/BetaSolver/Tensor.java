@@ -1,4 +1,4 @@
-package org.openjfx.SolverAI;
+package sample.BetaSolver;
 
 import java.util.ArrayList;
 

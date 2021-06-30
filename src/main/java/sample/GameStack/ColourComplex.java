@@ -1,6 +1,5 @@
-package org.openjfx.GameStack;
+package sample.GameStack;
 
-import java.util.ArrayList;
 //Replaced class with ColorComplex
 public class ColourComplex extends ColorComplex{
 /*    public ColourComplex(){

@@ -1,4 +1,4 @@
-package org.openjfx.SolverAI;
+package sample.BetaSolver;
 
 public class InitLooper extends NNestedForLoop<Void,Boolean> {
     public InitLooper(){
