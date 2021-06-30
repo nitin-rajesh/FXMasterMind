@@ -1,84 +1,80 @@
 package sample.SolverStack;
 
+import sample.GameStack.ColorComplex;
 import sample.GameStack.GameRecord;
 
 import java.util.Arrays;
 
-public class InfinitySolver extends MiniSolver{
-    boolean[] solutionSet;
-    int sizeOfSolutionSet;
-
-    public InfinitySolver(GameRecord copyRec) {
-        super(copyRec);
-        int sizeOfSolutionSet = 1;
-        for(int i = 0; i < solvable.numberOfColumns; i++){
-            sizeOfSolutionSet *= solvable.numberOfColors;
+public class InfinitySolver {
+    boolean[][][][] solutionSet;
+    int[] firstPosInSolutionSet;
+    GameRecord solvable;
+    public InfinitySolver(GameRecord copyRec){
+        solvable = new GameRecord(copyRec);
+        firstPosInSolutionSet = new int[copyRec.numberOfColumns];
+        for(int i = 0; i < firstPosInSolutionSet.length; i++){
+            firstPosInSolutionSet[i] = -1;
         }
-
-        solutionSet = new boolean[sizeOfSolutionSet];
-        System.out.println(sizeOfSolutionSet);
-        for(int i = 0; i < sizeOfSolutionSet; i++){
-            if(!solvable.isRepeat){
-                if(checkForRepetitions(i)){
-                    solutionSet[i] = false;
+        solutionSet = new boolean[copyRec.numberOfColors][copyRec.numberOfColors][copyRec.numberOfColors][copyRec.numberOfColors];
+        for (int i = 0; i < solvable.numberOfColors; ++i) {
+            for (int j = 0; j < solvable.numberOfColors; ++j) {
+                for (int k = 0; k < solvable.numberOfColors; ++k) {
+                    for (int l = 0; l < solvable.numberOfColors; ++l) {
+                        if ((i == j || i == k || i == l || j == k || j == l || k == l) && !solvable.isRepeat) {
+                            solutionSet[i][j][k][l] = false;
+                        } else {
+                            solutionSet[i][j][k][l] = true;
+                        }
+                    }
                 }
             }
-            solutionSet[i] = true;
         }
     }
-
-    int getIndexValue(int[] guess){
-        int val = 0;
-        for(int i = 0; i < guess.length; i++){
-            guess[i]--;
-            val += guess[i];
-            val *= 10;
-        }
-        return val/10;
-    }
-    int[] getArrayEntry(int guess){
-        String strArr = Integer.toString(guess);
-        int[] arr = new int[solvable.numberOfColumns];
-        for(int i = 0; i < strArr.length(); i++){
-            arr[i] = Integer.parseInt(String.valueOf(strArr.charAt(i))) + 1;
-        }
-        return arr;
-    }
-
-    boolean checkForRepetitions(int value){
-        while(value > 0){
-            int digit = value % 10;
-            int temp = value/10;
-            while(temp > 0){
-                if(digit == temp % 10){
-                    return true;
-                }
-                temp /= 10;
-            }
-            value /= 10;
-        }
-        return false;
-    }
-
     void eliminateSolutions(int lastRowAnswered){
         firstPosInSolutionSet[0] = -1;
         //System.out.println(solvable);
-        for(int i = 0; i < solutionSet.length; i++){
-            //System.out.print(0);
-            if(!solutionSet[i]){
-                //System.out.print(0);
-                continue;
-            }
-            //System.out.print(1);
-            int[] guess= getArrayEntry(i);
-            System.out.println(Arrays.toString(guess));
-            if(!colorCompare(lastRowAnswered,guess)){
-                solutionSet[i] = false;
-            } else if(firstPosInSolutionSet[0] == -1){
-                int[] temp = getArrayEntry(i);
-                System.arraycopy(temp,0,firstPosInSolutionSet,0,firstPosInSolutionSet.length);
-            } else {
+        for(int i = 0; i < solvable.numberOfColors; ++i){
+            for(int j = 0; j < solvable.numberOfColors; ++j){
+                for(int k = 0; k < solvable.numberOfColors; ++k){
+                    for(int l = 0; l < solvable.numberOfColors; ++l){
+                        if(!solutionSet[i][j][k][l]){
+                            continue;
+                        }
+                        int[] guess= {i+1,j+1,k+1,l+1};
+                        if(!colorCompare(lastRowAnswered,guess)){
+                            solutionSet[i][j][k][l] = false;
+                        } else if(firstPosInSolutionSet[0] == -1){
+                            firstPosInSolutionSet[0] = i + 1;
+                            firstPosInSolutionSet[1] = j + 1;
+                            firstPosInSolutionSet[2] = k + 1;
+                            firstPosInSolutionSet[3] = l + 1;
+                        } else {
+                        }
+                    }
+                }
             }
         }
+    }
+
+    public int[] rowGuesser(int row){
+        if(row==0){
+            int[] guess = {1,2,3,4};
+            solvable.appendGuess(guess);
+            return guess;
+        }
+        eliminateSolutions(row - 1);
+        solvable.appendGuess(firstPosInSolutionSet);
+        for( int i: firstPosInSolutionSet){
+            System.out.print(i);
+        }
+        System.out.println();
+        return firstPosInSolutionSet;
+    }
+
+    boolean colorCompare(int row, int[] possibleAnswer){
+        ColorComplex c = ColorComplex.colorCount(possibleAnswer,solvable.board[row]);
+        //System.out.println("row = " + row + ", possibleAnswer = " + Arrays.toString(possibleAnswer));
+        //System.out.println(c.reds + ":" + c.whites + "::" + solvable.countReds(row) + solvable.countWhites(row));
+        return(c.reds == solvable.countReds(row) && c.whites == solvable.countWhites(row));
     }
 }

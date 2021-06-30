@@ -12,15 +12,17 @@ import java.util.Arrays;
 import java.util.List;
 
 
-public class GameTime extends GameBoard{
+public class GameTime extends GameBoard {
     // GameTime class handles variables during gameplay
     MiniSolver aiSolver;
     GameRecord GameInProgress;
     boolean endOfGame;
     boolean isAI;
+    boolean showClues;
     public GameTime(int varCount, int constCount, boolean isRepeat){
         endOfGame = false;
         isAI = false;
+        showClues = false;
         varCount = (varCount/2)*2;
         if(!isRepeat && (varCount > constCount))
             constCount = varCount;
@@ -28,7 +30,12 @@ public class GameTime extends GameBoard{
             constCount = (constCount/2)*2;
         }
         GameInProgress = new GameRecord(varCount,constCount,isRepeat);
-        aiSolver = new OctaSolver(GameInProgress);
+        if(varCount == 8 && constCount == 8)
+            aiSolver = new OctaSolver(GameInProgress);
+        else if(varCount == 6)
+            aiSolver = new HexaSolver(GameInProgress);
+        else if(varCount == 4)
+            aiSolver = new QuattroSolver(GameInProgress);
         entryBar = new ToolBar[2];
         numberOfGuesses = GameInProgress.numberOfGuesses;
         variableCount = varCount;
@@ -65,12 +72,11 @@ public class GameTime extends GameBoard{
         }
     }
     private void initOptionButtons(){
-        List<String> tempList = Arrays.asList("Clear","Answer","AI solve");
+        List<String> tempList = Arrays.asList("Clear","Answer","AI");
         optionButtons = new Button[tempList.size()];
         for(int i = 0; i < tempList.size(); i++){
-            if(i == 2 && ((GameInProgress.numberOfColumns >= 8 && GameInProgress.numberOfColors > 10)|| GameInProgress.numberOfColors > 16))
-                break;
             optionButtons[i] = new Button(tempList.get(i));
+            optionButtons[i].setPrefWidth(60);
             switch (i){
                 case 0:
                     optionButtons[i].setOnAction(new EventHandler<ActionEvent>() {
@@ -107,16 +113,22 @@ public class GameTime extends GameBoard{
                     optionButtons[i].setOnAction(new EventHandler<ActionEvent>() {
                         @Override
                         public void handle(ActionEvent event) {
-                            resetGame();
-                            isAI = true;
-                            //MiniSolver aiSolver = new QuattroSolver(GameInProgress);
-                            for(int i = 0; i < GameInProgress.numberOfGuesses - 1; i++){
-                                int[] guess = aiSolver.rowGuesser(i);
-                                for(int entry: guess){
+                            if(!endOfGame) {
+                                resetGame();
+                                isAI = true;
+                                MiniSolver instanceSolver;
+                                if(GameInProgress.numberOfColumns == 6)
+                                    instanceSolver = new HexaSolver(GameInProgress);
+                                else
+                                    instanceSolver = new QuattroSolver(GameInProgress);
+                                for (int i = 0; i < GameInProgress.numberOfGuesses - 1; i++) {
+                                int[] guess = instanceSolver.rowGuesser(i);
+                                for (int entry : guess) {
                                     addEntry(entry - 1);
                                 }
-                                if(GameInProgress.victory)
+                                if (GameInProgress.victory)
                                     break;
+                                }
                             }
                         }
                     });
@@ -159,7 +171,9 @@ public class GameTime extends GameBoard{
             temp.append("  ");
             answerTexts[GameInProgress.currentTurn].setText(temp.toString());
             if (GameInProgress.iterator == GameInProgress.numberOfColumns) {
-                System.out.println(Arrays.toString(aiSolver.rowGuesser(GameInProgress.currentTurn)));
+                //System.out.println(aiSolver.rowGuesser(GameInProgress.currentTurn));
+                if(!isAI)
+                    infoText.setText(Arrays.toString(aiSolver.rowGuesser(GameInProgress.currentTurn)));
                 int redCount = GameInProgress.countReds();
                 int whiteCount = GameInProgress.countWhites();
                 for (k = 0; k < redCount; k++) {

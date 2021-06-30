@@ -60,7 +60,11 @@ class GameBoard{
             buttonPane.add(buttons[i],i%(constantCount/2),(i<constantCount/2)?0:1);
         }
         HBox bar = new HBox();
+        infoText = new Text(" ");
+        infoText.setFont(Font.font("Monaco",10));
         bar.getChildren().add(buttonPane);
+        bar.getChildren().add(infoText);
+        bar.setSpacing(20);
         return bar;
     }
 

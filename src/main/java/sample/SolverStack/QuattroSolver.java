@@ -2,6 +2,8 @@ package sample.SolverStack;
 
 import sample.GameStack.GameRecord;
 
+import java.util.Arrays;
+
 public class QuattroSolver extends MiniSolver{
     boolean[][][][] solutionSet;
 
@@ -29,12 +31,13 @@ public class QuattroSolver extends MiniSolver{
             solvable.appendGuess(guess);
             return guess;
         }
+        //System.out.println(Arrays.toString(solvable.board[row - 1]));
         eliminateSolutions(row - 1);
         solvable.appendGuess(firstPosInSolutionSet);
-        for( int i: firstPosInSolutionSet){
+        /*for( int i: firstPosInSolutionSet){
             System.out.print(i);
         }
-        System.out.println();
+        System.out.println();*/
         return firstPosInSolutionSet;
     }
 
