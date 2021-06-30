@@ -198,7 +198,7 @@ public class GameTime extends GameBoard {
             }
             temp.append("  ");
             answerTexts[GameInProgress.currentTurn].setText(temp.toString());
-            if(showClues)
+            if(showClues && GameInProgress.currentTurn > 0)
                 infoText.setText(clueArray + "\nTry this");
             if (GameInProgress.iterator == GameInProgress.numberOfColumns) {
                 //System.out.println(aiSolver.rowGuesser(GameInProgress.currentTurn));
