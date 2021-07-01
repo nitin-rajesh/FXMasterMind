@@ -47,10 +47,10 @@ public class HexaSolver extends MiniSolver{
         }
         eliminateSolutions(row - 1);
         solvable.appendGuess(firstPosInSolutionSet);
-        for( int i: firstPosInSolutionSet){
+        /*for( int i: firstPosInSolutionSet){
             System.out.print(i);
-        }
-        System.out.println();
+        }*/
+        //System.out.println();
         return firstPosInSolutionSet;
     }
 

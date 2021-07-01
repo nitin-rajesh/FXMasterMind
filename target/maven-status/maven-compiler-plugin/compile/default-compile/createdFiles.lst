@@ -8,7 +8,6 @@ sample/Controller.class
 sample/BetaSolver/Looper.class
 sample/SolverStack/OctaSolver.class
 sample/GameStack/GameTime.class
-sample/GameStack/GameTime$4.class
 sample/SolverStack/MiniSolver.class
 sample/SolverStack/InfinitySolver.class
 sample/BetaSolver/NNestedForLoop.class
@@ -19,9 +18,7 @@ sample/BetaSolver/InitLooper.class
 sample/GameStack/GameRecord.class
 sample/SolverStack/QuattroSolver.class
 sample/GameStack/GameBoard.class
-sample/GameStack/GameTime$3.class
 sample/SolverStack/HexaSolver.class
-sample/GameStack/GameTime$5.class
 sample/BetaSolver/FindNextPositionLooper.class
 sample/Main.class
 sample/GameStack/Solver.class

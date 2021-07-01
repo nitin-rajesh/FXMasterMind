@@ -60,9 +60,9 @@ public class GameTime extends GameBoard {
             return false;
         if(GameInProgress.numberOfColumns == 8 && GameInProgress.numberOfColors > 8)
             return false;
-        if(GameInProgress.numberOfColumns == 6 && GameInProgress.numberOfColumns > 14)
+        if(GameInProgress.numberOfColumns == 6 && GameInProgress.numberOfColors > 14)
             return false;
-        if(GameInProgress.numberOfColumns == 4 && GameInProgress.numberOfColumns > 16)
+        if(GameInProgress.numberOfColumns == 4 && GameInProgress.numberOfColors > 16)
             return false;
         return true;
     }
@@ -103,48 +103,39 @@ public class GameTime extends GameBoard {
             optionButtons[i].setPrefWidth(60);
             switch (i){
                 case 0:
-                    optionButtons[i].setOnAction(new EventHandler<ActionEvent>() {
-                        @Override
-                        public void handle(ActionEvent event) {
-                            if(!endOfGame) {
-                                String filler = " ";
-                                for (int j = 0; j < GameInProgress.numberOfColumns; j++) {
-                                    filler = filler.concat("*  ");
-                                }
-                                answerTexts[GameInProgress.currentTurn].setText(filler);
-                                GameInProgress.iterator = 0;
+                    optionButtons[i].setOnAction(event -> {
+                        if(!endOfGame) {
+                            String filler = " ";
+                            for (int j = 0; j < GameInProgress.numberOfColumns; j++) {
+                                filler = filler.concat("*  ");
                             }
+                            answerTexts[GameInProgress.currentTurn].setText(filler);
+                            GameInProgress.iterator = 0;
                         }
                     });
                     break;
 
                 case 1:
-                    optionButtons[i].setOnAction(new EventHandler<ActionEvent>() {
-                        @Override
-                        public void handle(ActionEvent event) {
-                            if(!endOfGame) {
-                                resetGame();
-                                isAI = true;
-                                MiniSolver instanceSolver = theRightSolver(GameInProgress.numberOfColumns);
-                                for (int i = 0; i < GameInProgress.numberOfGuesses - 1; i++) {
-                                int[] guess = instanceSolver.rowGuesser(i);
-                                for (int entry : guess) {
-                                    addEntry(entry - 1);
-                                }
-                                if (GameInProgress.victory)
-                                    break;
-                                }
+                    optionButtons[i].setOnAction(event -> {
+                        if(!endOfGame) {
+                            resetGame();
+                            isAI = true;
+                            MiniSolver instanceSolver = theRightSolver(GameInProgress.numberOfColumns);
+                            for (int i1 = 0; i1 < GameInProgress.numberOfGuesses - 1; i1++) {
+                            int[] guess = instanceSolver.rowGuesser(i1);
+                            for (int entry : guess) {
+                                addEntry(entry - 1);
+                            }
+                            if (GameInProgress.victory)
+                                break;
                             }
                         }
                     });
                     break;
                 case 2:
-                    optionButtons[i].setOnAction(new EventHandler<ActionEvent>() {
-                        @Override
-                        public void handle(ActionEvent event) {
-                            showClues = true;
-                            infoText.setText("Clues from AI\nshow up here");
-                        }
+                    optionButtons[i].setOnAction(event -> {
+                        showClues = true;
+                        infoText.setText("Clues from AI\nshow up here");
                     });
                     break;
             }
@@ -167,7 +158,7 @@ public class GameTime extends GameBoard {
         alert.setAlertType(Alert.AlertType.INFORMATION);
         String answerStr = "";
         for(int k = 0; k < GameInProgress.numberOfColumns; k++){
-            answerStr = answerStr.concat(Integer.toString(GameInProgress.answer[k]) + " ");
+            answerStr = answerStr.concat(GameInProgress.answer[k] + " ");
         }
         alert.setTitle("Shhh...");
         alert.setContentText("Answer: " + answerStr);
@@ -217,24 +208,25 @@ public class GameTime extends GameBoard {
                 }
                 if (GameInProgress.victory) {
                     Alert alert = new Alert((Alert.AlertType.NONE));
-                    if (GameInProgress.isScam) {
+
+                    alert.setAlertType(Alert.AlertType.INFORMATION);
+                    if(isAI){
+                        alert.setTitle("Guess what");
+                        alert.setContentText("I WIN !!");
+                    }
+                    else if (GameInProgress.isScam) {
                         alert.setAlertType(Alert.AlertType.WARNING);
                         alert.setTitle("Sus");
                         alert.setContentText("Breach detected");
-                    } else {
-                        alert.setAlertType(Alert.AlertType.INFORMATION);
-                        if(isAI){
-                            alert.setTitle("Guess what");
-                            alert.setContentText("I WIN !!");
-                        }
-                        else if(showClues){
-                            alert.setTitle("You won!");
-                            alert.setContentText("You're welcome for the help :)");
-                        }
-                        else {
-                            alert.setTitle("Congratulations");
-                            alert.setContentText("You WIN !!");
-                        }
+                    }
+                    else if(showClues){
+                        alert.setTitle("You won!");
+                        alert.setContentText("You're welcome for the help :)");
+                    }
+
+                    else {
+                        alert.setTitle("Congratulations");
+                        alert.setContentText("You WIN !!");
                     }
                     endOfGame = true;
                     alert.showAndWait();
@@ -256,7 +248,7 @@ public class GameTime extends GameBoard {
     public void backSpace(){
         String temp = "";
         int k;
-        if(GameInProgress.iterator > 0){
+        if(GameInProgress.iterator > 0 && GameInProgress.iterator != GameInProgress.numberOfColumns){
             if(GameInProgress.iterator > 1) {
                 for (k = 0; k < GameInProgress.iterator - 1; k++) {
                     if (k > 0) {
