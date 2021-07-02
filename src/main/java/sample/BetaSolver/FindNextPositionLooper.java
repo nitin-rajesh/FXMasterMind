@@ -15,7 +15,7 @@ public class FindNextPositionLooper extends NNestedForLoop<int[],Boolean>{
         }
         else {
             for(int i = 0; i < numberOfDimensions; i++){
-                internalCurrentDimensionPositions[i] = 0;
+                internalCurrentDimensionPositions[i] = i + 1;
             }
         }
         while (!stop){

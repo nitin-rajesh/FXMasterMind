@@ -29,7 +29,7 @@ public class ColorComplex {
         whites -= redScan(answer,currentEntry);
         return whites;
     }
-    ColorComplex(){
+    public ColorComplex(){
         reds = 0;
         whites = 0;
     }
@@ -58,5 +58,8 @@ public class ColorComplex {
         temp.reds = red;
         temp.whites = white;
         return temp;
+    }
+    public static boolean colorCompare(ColorComplex a, ColorComplex b){
+        return (a.reds == b.reds && a.whites == b.whites);
     }
 }

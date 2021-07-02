@@ -28,7 +28,7 @@ public class Tensor<T> {
         }
         this.data = new ArrayList<>();
         //System.out.println(this.data.size());
-        for(int i = 0; i < num; i++){
+        for(int i = 0; i < 2*num; i++){
             data.add(null);
         }
         //System.out.println(this.data.size());

@@ -18,20 +18,7 @@ abstract public class MiniSolver {
     }
     abstract void eliminateSolutions(int lastRowAnswered);
 
-    public int[] rowGuesser(int row){
-        if(row==0){
-            int[] guess = {1,2,3,4};
-            solvable.appendGuess(guess);
-            return guess;
-        }
-        eliminateSolutions(row - 1);
-        solvable.appendGuess(firstPosInSolutionSet);
-        for( int i: firstPosInSolutionSet){
-            System.out.print(i);
-        }
-        System.out.println();
-        return firstPosInSolutionSet;
-    }
+    abstract public int[] rowGuesser(int row);
 
     boolean colorCompare(int row, int[] possibleAnswer){
         ColorComplex c = ColorComplex.colorCount(possibleAnswer,solvable.board[row]);

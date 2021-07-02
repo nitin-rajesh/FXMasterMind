@@ -1,6 +1,9 @@
 package sample.SolverStack;
 
+import sample.GameStack.ColorComplex;
 import sample.GameStack.GameRecord;
+
+import java.util.Arrays;
 
 public class OctaSolver extends MiniSolver{
     boolean[][][][][][][][] solutionSet;
@@ -51,10 +54,11 @@ public class OctaSolver extends MiniSolver{
         }
         eliminateSolutions(row - 1);
         solvable.appendGuess(firstPosInSolutionSet);
+        /*solvable.appendGuess(firstPosInSolutionSet);
         for( int i: firstPosInSolutionSet){
             System.out.print(i);
-        }
-        System.out.println();
+        }*/
+        //System.out.println(elimCount);
         return firstPosInSolutionSet;
     }
 
@@ -69,11 +73,11 @@ public class OctaSolver extends MiniSolver{
                             for (int n = 0; n < solvable.numberOfColors; ++n) {
                                 for (int o = 0; o < solvable.numberOfColors; ++o) {
                                     for (int p = 0; p < solvable.numberOfColors; ++p) {
-                                        if (!solutionSet[i][j][k][l][m][n][o][p]) {
+                                        if(!solutionSet[i][j][k][l][m][n][o][p]){
                                             continue;
                                         }
-                                        int[] guess = {i + 1, j + 1, k + 1, l + 1, m + 1, n + 1,o + 1, p + 1};
-                                        if (!colorCompare(lastRowAnswered, guess)) {
+                                        int[] guess= {i+1,j+1,k+1,l+1,m+1,n+1,o+1,p+1};
+                                        if(!colorCompare(lastRowAnswered,guess)){
                                             solutionSet[i][j][k][l][m][n][o][p] = false;
                                         } else if (firstPosInSolutionSet[0] == -1) {
                                             firstPosInSolutionSet[0] = i + 1;

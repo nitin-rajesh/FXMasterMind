@@ -28,12 +28,14 @@ public class EliminationLooper extends NNestedForLoop<Void,Boolean>{
         reset();
         this.guess = guess;
         this.guessComplex = guessComplex;
+        System.out.println();
     }
     protected void loopBody(){
         if(arr.getAtPosition(currentDimensionPositions)){
             ColorComplex c = ColorComplex.colorCount(currentDimensionPositions,guess);
-            //System.out.println(currentDimensionPositions[0] + "  " + currentDimensionPositions[1] + "  " + c.comparison(guessComplex));
-            arr.setAtPosition(currentDimensionPositions,(c==guessComplex));
+            //System.out.println(currentDimensionPositions[0] + "  " + currentDimensionPositions[1] + "  " );
+            //System.out.println(ColorComplex.colorCompare(c,guessComplex));
+            arr.setAtPosition(currentDimensionPositions,ColorComplex.colorCompare(c,guessComplex));
         }
     }
 
