@@ -35,8 +35,8 @@ public class InfinitySolver extends MiniSolver{
             guess = next.getResult();
             solvable.appendGuess(guess);
             ColorComplex guessComplex = new ColorComplex();
-            guessComplex.reds = solvable.countReds();
-            guessComplex.whites = solvable.countWhites();
+            guessComplex.reds = solvable.countReds(row);
+            guessComplex.whites = solvable.countWhites(row);
             next.reset();
             eliminator.reset(guess, guessComplex);
             eliminator.loop();

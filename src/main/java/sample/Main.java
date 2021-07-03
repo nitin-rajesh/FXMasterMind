@@ -7,12 +7,13 @@ import javafx.scene.Scene;
 import javafx.stage.Stage;
 
 import java.util.EventListener;
+import java.util.Objects;
 
 public class Main extends Application implements EventListener{
 
     @Override
     public void start(Stage primaryStage) throws Exception{
-        Parent root = FXMLLoader.load(getClass().getResource("/home_page.fxml"));
+        Parent root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("/home_page.fxml")));
         primaryStage.setTitle("FXMasterMind");
         Scene scene = new Scene(root);
         primaryStage.setScene(scene);

@@ -1,6 +1,5 @@
 package sample;
 
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXMLLoader;
@@ -16,12 +15,13 @@ import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import sample.GameStack.GameTime;
 import java.io.IOException;
-import java.security.Key;
 import java.util.ArrayList;
 import java.util.EventListener;
+import java.util.Objects;
 
 public class Controller implements EventListener {
     Stage stage;
+    Stage helpStage = new Stage();
     GameTime instance;
     int buffer = 0;
     boolean acceptKeyStroke = false;
@@ -56,30 +56,28 @@ public class Controller implements EventListener {
         //add button grid to base toolbar
         baseBar.getItems().add(bar);
         borderPane.setBottom(baseBar);
+        //add option bar to top
         ButtonBar upperMenu = instance.drawOptionBar();
         Button exitButton = new Button("Exit");
         Alert alert = new Alert((Alert.AlertType.NONE));
-        exitButton.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent event) {
-                if(!instance.isEndOfGame()){
-                    alert.setAlertType(Alert.AlertType.CONFIRMATION);
-                    alert.setTitle("End game?");
-                    alert.setContentText("Do you want to end this game?");
-                    alert.showAndWait();
-                    if(alert.getResult() == ButtonType.OK){
-                        try {
-                            start(event);
-                        } catch (Exception exception) {
-                            exception.printStackTrace();
-                        }
-                    }
-                }else{
+        exitButton.setOnAction(event -> {
+            if(!instance.isEndOfGame()){
+                alert.setAlertType(Alert.AlertType.CONFIRMATION);
+                alert.setTitle("End game?");
+                alert.setContentText("Do you want to end this game?");
+                alert.showAndWait();
+                if(alert.getResult() == ButtonType.OK){
                     try {
                         start(event);
                     } catch (Exception exception) {
                         exception.printStackTrace();
                     }
+                }
+            }else{
+                try {
+                    start(event);
+                } catch (Exception exception) {
+                    exception.printStackTrace();
                 }
             }
         });
@@ -108,7 +106,7 @@ public class Controller implements EventListener {
                             instance.addPseudoEntry(buffer);
                     }
                 }
-                catch (NumberFormatException exception) {
+                catch (NumberFormatException ignored) {
                 }
                 acceptKeyStroke = false;
             }
@@ -119,7 +117,7 @@ public class Controller implements EventListener {
                 }
             }
             if(instance.isEndOfGame()){
-                if(keyEvent.getCode().toString() == "ESCAPE"){
+                if(keyEvent.getCode().toString().equals("ESCAPE")){
                     try {
                         start(scene);
                     } catch (Exception exception) {
@@ -130,10 +128,10 @@ public class Controller implements EventListener {
         });
 
         scene.setOnKeyReleased(keyEvent -> {
-            if(keyEvent.getCode().toString() == "ALT") {
+            if(keyEvent.getCode().toString().equals("ALT")) {
                 try {
                     instance.addEntry(buffer - 1);
-                } catch (NumberFormatException exception) {
+                } catch (NumberFormatException ignored) {
                 }
                 buffer = 0;
             }
@@ -144,14 +142,14 @@ public class Controller implements EventListener {
     }
 
     public void start(ActionEvent e) throws Exception{
-        Parent root = FXMLLoader.load(getClass().getResource("/home_page.fxml"));
+        Parent root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("/home_page.fxml")));
         stage = (Stage) ((Node) e.getSource()).getScene().getWindow();
         stage.setTitle("FXMasterMind");
         stage.setScene(new Scene(root));
         stage.show();
     }
     public void start(Scene scene) throws Exception{
-        Parent root = FXMLLoader.load(getClass().getResource("/home_page.fxml"));
+        Parent root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("/home_page.fxml")));
         stage = (Stage) (scene.getWindow());
         stage.setTitle("FXMasterMind");
         stage.setScene(new Scene(root));
@@ -180,19 +178,16 @@ public class Controller implements EventListener {
         Button saveButton = new Button();
         saveButton.setText("Save");
         saveButton.setPrefSize(50,30);
-        saveButton.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent event) {
-                String varTemp= varCountBox.getSelectionModel().getSelectedItem();
-                String constTemp = constCountBox.getSelectionModel().getSelectedItem();
-                boolean isRep = boolRepBox.isSelected();
+        saveButton.setOnAction(event -> {
+            String varTemp= varCountBox.getSelectionModel().getSelectedItem();
+            String constTemp = constCountBox.getSelectionModel().getSelectedItem();
+            boolean isRep = boolRepBox.isSelected();
 
-                try {
-                    FileOps.writeValues(varTemp,constTemp,isRep);
-                    start(event);
-                } catch (Exception exception) {
-                    exception.printStackTrace();
-                }
+            try {
+                FileOps.writeValues(varTemp,constTemp,isRep);
+                start(event);
+            } catch (Exception exception) {
+                exception.printStackTrace();
             }
         });
         ArrayList<String> settings = FileOps.readValues();
@@ -210,5 +205,14 @@ public class Controller implements EventListener {
         Scene scene = new Scene(root, root.getPrefWidth(), root.getPrefHeight());
         stage.setScene(scene);
         stage.show();
+    }
+
+    @FXML
+    public void helpPage() throws IOException {
+        Parent root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("/help_menu.fxml")));
+        helpStage.setTitle("Help page");
+        Scene scene = new Scene(root);
+        helpStage.setScene(scene);
+        helpStage.show();
     }
 }
