@@ -1,9 +1,10 @@
+sample/PrefStack/PrefSettings.class
 sample/GameStack/GameTime$1.class
 sample/HelpMenu.class
 sample/BetaSolver/Tensor.class
-sample/FileOps.class
 sample/BetaSolver/EliminationLooper.class
 sample/GameStack/ColourComplex.class
+sample/PrefStack/PrefReader.class
 sample/Controller.class
 sample/BetaSolver/Looper.class
 sample/SolverStack/OctaSolver.class
@@ -17,6 +18,7 @@ sample/GameStack/GameRecord.class
 sample/SolverStack/QuattroSolver.class
 sample/GameStack/GameBoard.class
 sample/SolverStack/HexaSolver.class
+sample/PrefStack/PrefWriter.class
 sample/BetaSolver/FindNextPositionLooper.class
 sample/Main.class
 sample/GameStack/Solver.class

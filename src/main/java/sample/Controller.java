@@ -14,6 +14,8 @@ import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import sample.GameStack.GameTime;
+import sample.PrefStack.*;
+
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.EventListener;
@@ -29,7 +31,8 @@ public class Controller implements EventListener {
     @FXML
     public void switchScene(ActionEvent e) throws IOException {
         //System.out.println("Start");
-        ArrayList<String> settings = FileOps.readValues();
+        PrefSettings reader = new PrefReader();
+        ArrayList<String> settings = reader.readValues();
         instance = new GameTime(Integer.parseInt(settings.get(0)),Integer.parseInt((settings.get(1))), !settings.get(2).equals("0"));
         AnchorPane root = new AnchorPane();
         stage = (Stage) ((Node) e.getSource()).getScene().getWindow();
@@ -184,13 +187,15 @@ public class Controller implements EventListener {
             boolean isRep = boolRepBox.isSelected();
 
             try {
-                FileOps.writeValues(varTemp,constTemp,isRep);
+                PrefSettings writer = new PrefWriter();
+                writer.writeValues(varTemp,constTemp,isRep?"1":"0");
                 start(event);
             } catch (Exception exception) {
                 exception.printStackTrace();
             }
         });
-        ArrayList<String> settings = FileOps.readValues();
+        PrefSettings reader = new PrefReader();
+        ArrayList<String> settings = reader.readValues();
         selectionGrid.add(varCountBox,0,0);
         selectionGrid.add(constCountBox,1,0);
         selectionGrid.add(boolRepBox,0,1);
