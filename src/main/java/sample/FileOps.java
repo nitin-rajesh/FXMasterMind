@@ -1,11 +1,10 @@
 package sample;
 
 import java.io.File;
-import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.List;
+import java.util.Collections;
 import java.util.Scanner;
 
 public class FileOps {
@@ -24,9 +23,7 @@ public class FileOps {
         }
         if(settings.size() != 3 ){
             settings.clear();
-            for(String str: defaults){
-                settings.add(str);
-            }
+            Collections.addAll(settings, defaults);
         }
         else{
             for(int i = 0; i < settings.size(); i++){

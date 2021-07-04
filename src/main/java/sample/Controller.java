@@ -209,7 +209,7 @@ public class Controller implements EventListener {
 
     @FXML
     public void helpPage() throws IOException {
-        Parent root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("/help_menu.fxml")));
+        Parent root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("/help_menu_p1.fxml")));
         helpStage.setTitle("Help page");
         Scene scene = new Scene(root);
         helpStage.setScene(scene);

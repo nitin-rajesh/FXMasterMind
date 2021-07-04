@@ -84,12 +84,7 @@ public class GameTime extends GameBoard {
             buttons[i] = new Button();
             buttons[i].setText(Integer.toString(i + 1));
             int finalI = i;
-            buttons[i].setOnAction(new EventHandler<ActionEvent>() {
-                @Override
-                public void handle(ActionEvent event) {
-                    addEntry(finalI);
-                }
-            });
+            buttons[i].setOnAction(event -> addEntry(finalI));
         }
     }
     private void initOptionButtons(){
