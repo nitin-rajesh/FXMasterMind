@@ -39,21 +39,6 @@ public class HexaSolver extends MiniSolver{
         return false;
     }
 
-    public int[] rowGuesser(int row){
-        if(row==0){
-            int[] guess = {1,2,3,4,5,6};
-            solvable.appendGuess(guess);
-            return guess;
-        }
-        eliminateSolutions(row - 1);
-        solvable.appendGuess(firstPosInSolutionSet);
-        /*for( int i: firstPosInSolutionSet){
-            System.out.print(i);
-        }*/
-        //System.out.println();
-        return firstPosInSolutionSet;
-    }
-
     void eliminateSolutions(int lastRowAnswered){
         firstPosInSolutionSet[0] = -1;
         //System.out.println(solvable);

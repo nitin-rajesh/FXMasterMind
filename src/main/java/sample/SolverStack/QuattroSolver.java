@@ -25,22 +25,6 @@ public class QuattroSolver extends MiniSolver{
         }
     }
 
-    public int[] rowGuesser(int row){
-        if(row==0){
-            int[] guess = {1,2,3,4};
-            solvable.appendGuess(guess);
-            return guess;
-        }
-        //System.out.println(Arrays.toString(solvable.board[row - 1]));
-        eliminateSolutions(row - 1);
-        solvable.appendGuess(firstPosInSolutionSet);
-        /*for( int i: firstPosInSolutionSet){
-            System.out.print(i);
-        }
-        System.out.println();*/
-        return firstPosInSolutionSet;
-    }
-
     void eliminateSolutions(int lastRowAnswered){
         firstPosInSolutionSet[0] = -1;
         //System.out.println(solvable);
