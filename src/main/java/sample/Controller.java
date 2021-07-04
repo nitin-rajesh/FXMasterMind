@@ -12,6 +12,7 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.*;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
+import javafx.stage.Screen;
 import javafx.stage.Stage;
 import sample.GameStack.GameTime;
 import sample.PrefStack.*;
@@ -47,7 +48,7 @@ public class Controller implements EventListener {
         playArea.setContent(playWidgets);
         playArea.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
         playArea.setVbarPolicy(ScrollPane.ScrollBarPolicy.ALWAYS);
-        playArea.setPrefHeight(600);
+        playArea.setPrefHeight(Screen.getPrimary().getVisualBounds().getHeight()/2);
         //Grid of text boxes for guess status
         VBox textGrid = instance.drawTextFields();
         textGrid.setSpacing(81);
