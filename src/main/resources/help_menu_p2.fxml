@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ToolBar?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.shape.Line?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
+
+<AnchorPane prefHeight="650.0" prefWidth="380.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sample.HelpMenu">
+   <children>
+      <Text layoutX="127.0" layoutY="48.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Controls">
+         <font>
+            <Font name="DIN Alternate Bold" size="36.0" />
+         </font>
+      </Text>
+      <Text layoutX="39.0" layoutY="225.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Use the on-screen buttons to enter numbers..." wrappingWidth="144.9296875">
+         <font>
+            <Font size="18.0" />
+         </font>
+      </Text>
+      <ImageView fitHeight="92.0" fitWidth="179.0" layoutX="187.0" layoutY="204.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@Images/Screenshot%202021-07-04%20at%2011.57.16%20AM.png" />
+         </image>
+      </ImageView>
+      <Text layoutX="271.0" layoutY="343.0" strokeType="OUTSIDE" strokeWidth="0.0" text="...or type numbers using the keyboard" textAlignment="RIGHT" wrappingWidth="88.0">
+         <font>
+            <Font size="18.0" />
+         </font>
+      </Text>
+      <ImageView fitHeight="76.0" fitWidth="217.0" layoutX="34.0" layoutY="331.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@Images/MLA22LL.jpeg" />
+         </image>
+      </ImageView>
+      <Text layoutX="34.0" layoutY="458.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Hold down the alt/option key to type multiple digit numbers" wrappingWidth="207.95603942871094">
+         <font>
+            <Font size="18.0" />
+         </font>
+      </Text>
+      <ImageView fitHeight="76.0" fitWidth="103.0" layoutX="253.0" layoutY="435.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@Images/MLA22LL%20copy.jpeg" />
+         </image>
+      </ImageView>
+      <Text layoutX="51.0" layoutY="145.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Clear a row of entries" textAlignment="CENTER" wrappingWidth="57.0">
+         <font>
+            <Font size="12.0" />
+         </font>
+      </Text>
+      <Line endX="197.0" layoutX="157.0" layoutY="67.0" startX="-134.0" />
+      <ToolBar layoutX="1.0" layoutY="610.0" nodeOrientation="RIGHT_TO_LEFT" prefHeight="40.0" prefWidth="378.0">
+        <items>
+          <Button mnemonicParsing="false" onAction="#closePage" text="Got it" textAlignment="RIGHT" />
+            <Button mnemonicParsing="false" onAction="#prevPage" text="&lt;How to play" />
+            <Text fx:id="hiddenBox" strokeType="OUTSIDE" strokeWidth="0.0" text=" " textAlignment="RIGHT" wrappingWidth="191.029296875">
+               <font>
+                  <Font name="Monaco" size="10.0" />
+               </font>
+            </Text>
+        </items>
+      </ToolBar>
+      <Text layoutX="119.0" layoutY="145.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Use the AI to find the answer" textAlignment="CENTER" wrappingWidth="78.0">
+         <font>
+            <Font size="12.0" />
+         </font>
+      </Text>
+      <Text layoutX="203.0" layoutY="145.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Get clues from the AI mid-game" textAlignment="CENTER" wrappingWidth="78.0">
+         <font>
+            <Font size="12.0" />
+         </font>
+      </Text>
+      <Text layoutX="276.0" layoutY="145.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Leave a game" textAlignment="CENTER" wrappingWidth="78.0">
+         <font>
+            <Font size="12.0" />
+         </font>
+      </Text>
+      <Text layoutX="39.0" layoutY="96.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Menu bar:" wrappingWidth="144.9296875">
+         <font>
+            <Font size="18.0" />
+         </font>
+      </Text>
+      <ImageView fitHeight="64.0" fitWidth="114.0" layoutX="35.0" layoutY="531.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@Images/MLA22LL-1.jpeg" />
+         </image>
+      </ImageView>
+      <Text layoutX="142.0" layoutY="558.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Once you're done, press escape to leave the game" wrappingWidth="221.95603942871094">
+         <font>
+            <Font size="18.0" />
+         </font>
+      </Text>
+      <Button layoutX="43.0" layoutY="104.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="71.0" text="Clear" />
+      <Button layoutX="123.0" layoutY="104.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="71.0" text="AI" />
+      <Button layoutX="203.0" layoutY="104.0" mnemonicParsing="false" onAction="#showMessage" prefHeight="25.0" prefWidth="71.0" text="Clue" />
+      <Button layoutX="280.0" layoutY="104.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="71.0" text="Exit" />
+   </children>
+</AnchorPane>

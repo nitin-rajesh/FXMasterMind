@@ -1,9 +1,9 @@
 sample/GameStack/GameTime$1.class
+sample/HelpMenu.class
 sample/BetaSolver/Tensor.class
 sample/FileOps.class
 sample/BetaSolver/EliminationLooper.class
 sample/GameStack/ColourComplex.class
-sample/Controller$1.class
 sample/Controller.class
 sample/BetaSolver/Looper.class
 sample/SolverStack/OctaSolver.class
@@ -11,9 +11,7 @@ sample/GameStack/GameTime.class
 sample/SolverStack/MiniSolver.class
 sample/SolverStack/InfinitySolver.class
 sample/BetaSolver/NNestedForLoop.class
-sample/Controller$2.class
 sample/GameStack/ColorComplex.class
-sample/GameStack/GameTime$2.class
 sample/BetaSolver/InitLooper.class
 sample/GameStack/GameRecord.class
 sample/SolverStack/QuattroSolver.class
