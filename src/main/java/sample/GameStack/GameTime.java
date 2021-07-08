@@ -133,7 +133,11 @@ public class GameTime extends GameBoard {
                 case 2:
                     optionButtons[i].setOnAction(event -> {
                         showClues = true;
-                        infoText.setText("Clues from AI\nshow up here");
+                        String temp = "Clues from the AI";
+                        for(int k = 0; k < infoText.getText().length() - temp.length(); k++)
+                            temp = temp.concat(" ");
+                        temp = temp.concat("\nshow up here");
+                        infoText.setText(temp);
                     });
                     break;
             }
