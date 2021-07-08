@@ -1,6 +1,5 @@
 package sample.GameStack;
 import java.lang.Math;
-import java.util.ArrayList;
 
 public class GameRecord extends ColorComplex{
     ColorComplex c = new ColorComplex();
@@ -98,6 +97,10 @@ public class GameRecord extends ColorComplex{
         this.reds = redScan(answer, guess);
         this.whites = whiteScan(answer,guess);
     }
+    public int getCurrentTurn(){
+        return currentTurn;
+    }
+
     public void initBoard(int numberOfGuesses){
         board = new int[numberOfGuesses][numberOfColumns];
     }

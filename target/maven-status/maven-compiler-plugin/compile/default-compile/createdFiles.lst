@@ -13,10 +13,12 @@ sample/SolverStack/MiniSolver.class
 sample/SolverStack/InfinitySolver.class
 sample/BetaSolver/NNestedForLoop.class
 sample/GameStack/ColorComplex.class
+sample/GameStack/GameTime$2.class
 sample/BetaSolver/InitLooper.class
 sample/GameStack/GameRecord.class
 sample/SolverStack/QuattroSolver.class
 sample/GameStack/GameBoard.class
+sample/GameStack/GameTime$3.class
 sample/SolverStack/HexaSolver.class
 sample/PrefStack/PrefWriter.class
 sample/BetaSolver/FindNextPositionLooper.class

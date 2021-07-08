@@ -51,6 +51,22 @@ abstract public class MiniSolver {
         return firstPosInSolutionSet;
     }
 
+    public int[] rowGuesser(){
+        if(solvable.getCurrentTurn()==0){
+            int[] guess = generateRandomStart(solvable.numberOfColumns,solvable.numberOfColors,solvable.isRepeat);
+            solvable.appendGuess(guess);
+            return guess;
+        }
+        eliminateSolutions(solvable.getCurrentTurn());
+        solvable.appendGuess(firstPosInSolutionSet);
+        /*solvable.appendGuess(firstPosInSolutionSet);
+        for( int i: firstPosInSolutionSet){
+            System.out.print(i);
+        }*/
+        //System.out.println(elimCount);
+        return firstPosInSolutionSet;
+    }
+
     boolean colorCompare(int row, int[] possibleAnswer){
         ColorComplex c = ColorComplex.colorCount(possibleAnswer,solvable.board[row]);
         //System.out.println("row = " + row + ", possibleAnswer = " + Arrays.toString(possibleAnswer));

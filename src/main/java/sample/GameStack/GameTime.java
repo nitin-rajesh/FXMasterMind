@@ -14,6 +14,8 @@ import java.util.List;
 
 public class GameTime extends GameBoard {
     // GameTime class handles variables during gameplay
+    Thread initSolver;
+    Thread initGuesser;
     MiniSolver aiSolver;
     GameRecord GameInProgress;
     boolean endOfGame;
@@ -31,7 +33,21 @@ public class GameTime extends GameBoard {
             constCount = (constCount/2)*2;
         }
         GameInProgress = new GameRecord(varCount,constCount,isRepeat);
-        aiSolver = theRightSolver(GameInProgress.numberOfColumns);
+        initSolver = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                aiSolver = null;
+            }
+        });
+        if(isWithinLimits())
+            switch (varCount) {
+                case 8 -> initSolver = new Thread(() -> aiSolver = new OctaSolver(GameInProgress));
+                case 6 -> initSolver = new Thread(() -> aiSolver = new HexaSolver(GameInProgress));
+                case 4 -> initSolver = new Thread(() -> aiSolver = new QuattroSolver(GameInProgress));
+            }
+        //System.out.println(varCount);
+        initSolver.start();
+        //System.out.println(initSolver.isAlive());
         entryBar = new ToolBar[2];
         numberOfGuesses = GameInProgress.numberOfGuesses;
         variableCount = varCount;
@@ -40,29 +56,38 @@ public class GameTime extends GameBoard {
         initGuessButtons();
         initOptionButtons();
         initBoxes();
+
     }
 
     MiniSolver theRightSolver(int varCount){
-        if(isWithinLimits())
-            switch (varCount){
-                case 8:
-                    return new OctaSolver(GameInProgress);
-                case 6:
-                    return new HexaSolver(GameInProgress);
-                case 4:
-                    return new QuattroSolver(GameInProgress);
+        final MiniSolver[] temp = new MiniSolver[1];
+        Thread initSolver = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                temp[0] = null;
             }
-        return null;
+        });
+        if(isWithinLimits())
+            switch (varCount) {
+                case 8: return new OctaSolver(GameInProgress);
+                case 6: return new HexaSolver(GameInProgress);
+                case 4: return new QuattroSolver(GameInProgress);
+            }
+        initSolver.start();
+        try{
+            initSolver.join();
+        }catch (InterruptedException ignored){}
+        return temp[0];
     }
 
     boolean isWithinLimits(){
         if(GameInProgress.numberOfColumns > 8)
             return false;
-        if(GameInProgress.numberOfColumns == 8 && GameInProgress.numberOfColors > 8)
+        if(GameInProgress.numberOfColumns == 8 && GameInProgress.numberOfColors > 10)
             return false;
-        if(GameInProgress.numberOfColumns == 6 && GameInProgress.numberOfColors > 14)
+        if(GameInProgress.numberOfColumns == 6 && GameInProgress.numberOfColors > 22)
             return false;
-        if(GameInProgress.numberOfColumns == 4 && GameInProgress.numberOfColors > 16)
+        if(GameInProgress.numberOfColumns == 4 && GameInProgress.numberOfColors > 100)
             return false;
         return true;
     }
@@ -112,12 +137,12 @@ public class GameTime extends GameBoard {
 
                 case 1:
                     optionButtons[i].setOnAction(event -> {
-                        if(!endOfGame) {
+                        if(!endOfGame && !initSolver.isAlive()) {
                             resetGame();
                             isAI = true;
-                            MiniSolver instanceSolver = theRightSolver(GameInProgress.numberOfColumns);
+                            //MiniSolver instanceSolver = theRightSolver(GameInProgress.numberOfColumns);
                             for (int i1 = 0; i1 < GameInProgress.numberOfGuesses - 1; i1++) {
-                            int[] guess = instanceSolver.rowGuesser(i1);
+                            int[] guess = aiSolver.rowGuesser();
                             for (int entry : guess) {
                                 addEntry(entry - 1);
                             }
@@ -184,14 +209,20 @@ public class GameTime extends GameBoard {
             }
             temp.append("  ");
             answerTexts[GameInProgress.currentTurn].setText(temp.toString());
-            if(showClues && GameInProgress.currentTurn > 0)
+            if(showClues && GameInProgress.currentTurn > 0 && !initSolver.isAlive())
                 infoText.setText(clueArray + "\nTry this");
             if (GameInProgress.iterator == GameInProgress.numberOfColumns) {
                 //System.out.println(aiSolver.rowGuesser(GameInProgress.currentTurn));
-                if(!isAI && isWithinLimits()){
-                    clueArray = Arrays.toString(aiSolver.rowGuesser(GameInProgress.currentTurn));
-                    if(showClues)
-                        infoText.setText(clueArray + "\nTry this");
+                if(!isAI && isWithinLimits() && !initSolver.isAlive()){
+                    if(initGuesser == null || !initGuesser.isAlive()) {
+                        initGuesser = new Thread(() -> {
+                            clueArray = Arrays.toString(aiSolver.rowGuesser(GameInProgress.currentTurn));
+                            //System.out.println(clueArray);
+                            if (showClues)
+                                infoText.setText(clueArray + "\nTry this");
+                        });
+                        initGuesser.start();
+                    }
                 }
                 int redCount = GameInProgress.countReds();
                 int whiteCount = GameInProgress.countWhites();
@@ -311,6 +342,12 @@ public class GameTime extends GameBoard {
                     addEntry(finalI);
                 }
             });
+        }
+
+        for(int i = 0; i < numberOfGuesses ; i++){
+            for(int j = 0; j < GameInProgress.numberOfColumns; j++){
+                boxes[j][i].setFill(Color.GRAY);
+            }
         }
 
         GameInProgress.resetEntry();
