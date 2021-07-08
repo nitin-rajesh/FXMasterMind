@@ -59,27 +59,6 @@ public class GameTime extends GameBoard {
 
     }
 
-    MiniSolver theRightSolver(int varCount){
-        final MiniSolver[] temp = new MiniSolver[1];
-        Thread initSolver = new Thread(new Runnable() {
-            @Override
-            public void run() {
-                temp[0] = null;
-            }
-        });
-        if(isWithinLimits())
-            switch (varCount) {
-                case 8: return new OctaSolver(GameInProgress);
-                case 6: return new HexaSolver(GameInProgress);
-                case 4: return new QuattroSolver(GameInProgress);
-            }
-        initSolver.start();
-        try{
-            initSolver.join();
-        }catch (InterruptedException ignored){}
-        return temp[0];
-    }
-
     boolean isWithinLimits(){
         if(GameInProgress.numberOfColumns > 8)
             return false;
@@ -120,7 +99,6 @@ public class GameTime extends GameBoard {
         optionButtons = new Button[tempList.size()];
         for(int i = 0; i < tempList.size(); i++){
             optionButtons[i] = new Button(tempList.get(i));
-            optionButtons[i].setPrefWidth(60);
             switch (i){
                 case 0:
                     optionButtons[i].setOnAction(event -> {

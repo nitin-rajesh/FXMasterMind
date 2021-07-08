@@ -39,13 +39,12 @@ public class Controller implements EventListener {
         stage = (Stage) ((Node) e.getSource()).getScene().getWindow();
         BorderPane borderPane = new BorderPane();   //Main border pane to align all the widgets
         ScrollPane playArea = new ScrollPane();
-        BorderPane playWidgets = new BorderPane();
+        HBox playWidgets = new HBox();
+        HBox.setHgrow(playWidgets,Priority.ALWAYS);
         //Grid of squares
         VBox grid = instance.drawBoxGrid();
         grid.setSpacing(5);
         grid.setPadding(new Insets(5, 5, 0, 5));
-        playWidgets.setRight(grid);
-        playArea.setContent(playWidgets);
         playArea.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
         playArea.setVbarPolicy(ScrollPane.ScrollBarPolicy.ALWAYS);
         playArea.setPrefHeight(Screen.getPrimary().getVisualBounds().getHeight()/2);
@@ -53,7 +52,9 @@ public class Controller implements EventListener {
         VBox textGrid = instance.drawTextFields();
         textGrid.setSpacing(81);
         textGrid.setPadding(new Insets(52,20,20,20));
-        playWidgets.setLeft(textGrid);
+        playWidgets.getChildren().addAll(textGrid,grid);
+        //Add widgets to scroll pane
+        playArea.setContent(playWidgets);
         //Grid of guess buttons
         HBox bar = instance.drawGuessBar();
         ToolBar baseBar = new ToolBar();
@@ -174,7 +175,7 @@ public class Controller implements EventListener {
         ComboBox<String> varCountBox = new ComboBox<>();
         ComboBox<String> constCountBox = new ComboBox<>();
         varCountBox.getItems().addAll("4","6","8");
-        constCountBox.getItems().addAll("8","10","12","14");
+        constCountBox.getItems().addAll("8","10","12","16");
         boolRepBox = new CheckBox();
         boolRepBox.setText("Enable repetitions");
         varCountBox.setPrefSize(100,20);
