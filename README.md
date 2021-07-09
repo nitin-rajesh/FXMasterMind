@@ -4,7 +4,7 @@ _A logic enhancement initiative_
 ## How to play the game
 
 **Step 1: Download the .jar file**
-The jar file is available at Target/FXMasterMind-1.0-SNAPSHOT.jar
+The jar file is available at target/FXMasterMind-1.0-SNAPSHOT.jar
 
 **Step 2: Set up OpenJDK 16**
 Older JDK versions may not work
