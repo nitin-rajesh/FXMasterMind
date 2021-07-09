@@ -5,7 +5,7 @@ _A logic enhancement initiative_
 
 #### Step 1: Download the .jar file
 
-The jar file is available at target/FXMasterMind-1.0-SNAPSHOT.jar
+The '**target**' forlder contains FXMasterMind-1.0-SNAPSHOT.jar
 
 
 #### Step 2: Set up OpenJDK 16
