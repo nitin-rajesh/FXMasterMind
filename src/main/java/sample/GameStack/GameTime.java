@@ -4,8 +4,6 @@ import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.control.*;
 import javafx.scene.paint.Color;
-import javafx.scene.shape.Rectangle;
-import javafx.scene.text.Text;
 import sample.SolverStack.*;
 
 import java.util.Arrays;
@@ -17,22 +15,16 @@ public class GameTime extends GameBoard {
     Thread initSolver;
     Thread initGuesser;
     MiniSolver aiSolver;
-    GameRecord GameInProgress;
     boolean endOfGame;
     boolean isAI;
     boolean showClues;
     String clueArray;
     public GameTime(int varCount, int constCount, boolean isRepeat){
+        super(varCount,constCount,isRepeat);
         endOfGame = false;
         isAI = false;
         showClues = false;
-        varCount = (varCount/2)*2;
-        if(!isRepeat && (varCount > constCount))
-            constCount = varCount;
-        else {
-            constCount = (constCount/2)*2;
-        }
-        GameInProgress = new GameRecord(varCount,constCount,isRepeat);
+
         initSolver = new Thread(new Runnable() {
             @Override
             public void run() {
@@ -49,13 +41,8 @@ public class GameTime extends GameBoard {
         initSolver.start();
         //System.out.println(initSolver.isAlive());
         entryBar = new ToolBar[2];
-        numberOfGuesses = GameInProgress.numberOfGuesses;
-        variableCount = varCount;
-        constantCount = constCount;
-        initAnswerTexts();
-        initGuessButtons();
-        initOptionButtons();
-        initBoxes();
+        initGuessButtonFunction();
+        initOptionButtonFunction();
 
     }
 
@@ -71,27 +58,14 @@ public class GameTime extends GameBoard {
         return true;
     }
 
-    private void initAnswerTexts(){
-        answerTexts = new Text[numberOfGuesses];
-        String filler = " ";
-        for(int j = 0; j < GameInProgress.numberOfColumns; j++){
-            filler = filler.concat("*  ");
-        }
-        for(int i = 0; i < numberOfGuesses; i++){
-            answerTexts[i] = new Text();
-            answerTexts[i].setText(filler);
-        }
-    }
-    private void initGuessButtons(){
-        buttons = new Button[GameInProgress.numberOfColors];
+    private void initGuessButtonFunction(){
         for(int i = 0; i < GameInProgress.numberOfColors; i++){
-            buttons[i] = new Button();
             buttons[i].setText(Integer.toString(i + 1));
             int finalI = i;
             buttons[i].setOnAction(event -> addEntry(finalI));
         }
     }
-    private void initOptionButtons(){
+    private void initOptionButtonFunction(){
         List<String> tempList = Arrays.asList("Clear","AI","Clue");
         if(!isWithinLimits()){
             tempList = Arrays.asList("Clear");
@@ -143,14 +117,6 @@ public class GameTime extends GameBoard {
             }
         }
     }
-    private void initBoxes(){
-        boxes = new Rectangle[GameInProgress.numberOfColumns][numberOfGuesses];
-        for(int i = 0; i < numberOfGuesses ; i++){
-            for(int j = 0; j < GameInProgress.numberOfColumns; j++){
-                boxes[j][i] = new Rectangle(50,50, Color.GRAY);
-            }
-        }
-    }
     public boolean isEndOfGame(){
         return endOfGame;
     }
@@ -166,7 +132,6 @@ public class GameTime extends GameBoard {
         alert.setContentText("Answer: " + answerStr);
         alert.showAndWait();
         GameInProgress.isScam = true;
-
     }
 
     public void addEntry(int finalI){
@@ -331,7 +296,6 @@ public class GameTime extends GameBoard {
                 boxes[j][i].setFill(Color.GRAY);
             }
         }
-
         GameInProgress.resetEntry();
     }
 }

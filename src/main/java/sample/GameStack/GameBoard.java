@@ -12,9 +12,8 @@ import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 
-class GameBoard{
+abstract class GameBoard{
     //GameBoard class handles variables which draw the board
-
     VBox grid;
     int numberOfGuesses;
     int variableCount;
@@ -25,6 +24,23 @@ class GameBoard{
     Button[] optionButtons;
     Rectangle[][] boxes;
     Text infoText;
+    protected GameRecord GameInProgress;
+
+    GameBoard(int varCount, int constCount, boolean isRepeat){
+        varCount = (varCount/2)*2;
+        if(!isRepeat && (varCount > constCount))
+            constCount = varCount;
+        else {
+            constCount = (constCount/2)*2;
+        }
+        variableCount = varCount;
+        constantCount = constCount;
+        GameInProgress = new GameRecord(variableCount,constantCount,isRepeat);
+        numberOfGuesses = GameInProgress.numberOfGuesses;
+        initAnswerTexts();
+        initGuessButtons();
+        initBoxes();
+    }
 
     public VBox drawBoxGrid(){
         //Group group = new Group();
@@ -79,5 +95,32 @@ class GameBoard{
         }
         optionBar.setPadding(new Insets(5,5,5,5));
         return optionBar;
+    }
+
+    private void initAnswerTexts(){
+        answerTexts = new Text[numberOfGuesses];
+        String filler = " ";
+        for(int j = 0; j < variableCount; j++){
+            filler = filler.concat("*  ");
+        }
+        for(int i = 0; i < numberOfGuesses; i++){
+            answerTexts[i] = new Text();
+            answerTexts[i].setText(filler);
+        }
+    }
+
+    private void initBoxes(){
+        boxes = new Rectangle[variableCount][numberOfGuesses];
+        for(int i = 0; i < numberOfGuesses ; i++){
+            for(int j = 0; j < variableCount; j++){
+                boxes[j][i] = new Rectangle(50,50, Color.GRAY);
+            }
+        }
+    }
+    private void initGuessButtons(){
+        buttons = new Button[constantCount];
+        for(int i = 0; i < constantCount; i++){
+            buttons[i] = new Button();
+        }
     }
 }
