@@ -10,8 +10,6 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.*;
-import javafx.scene.text.Font;
-import javafx.scene.text.Text;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
 import sample.GameStack.GameTime;
@@ -162,55 +160,10 @@ public class Controller implements EventListener {
     }
 
     public void configPage(ActionEvent e) throws Exception{
+        Parent root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("/config_page.fxml")));
         stage = (Stage) ((Node) e.getSource()).getScene().getWindow();
-        AnchorPane root = new AnchorPane();
-        VBox Contents = new VBox();
-        Contents.setPadding(new Insets(20,20,20,20));
-        Contents.setSpacing(20);
-        Text title = new Text();
-        title.setText("Configure");
-        title.setFont(Font.font("DIN Alternate", 24));
-        Contents.getChildren().add(title);
-        GridPane selectionGrid = new GridPane();
-        ComboBox<String> varCountBox = new ComboBox<>();
-        ComboBox<String> constCountBox = new ComboBox<>();
-        varCountBox.getItems().addAll("4","6","8");
-        constCountBox.getItems().addAll("8","10","12","16");
-        boolRepBox = new CheckBox();
-        boolRepBox.setText("Enable repetitions");
-        varCountBox.setPrefSize(100,20);
-        constCountBox.setPrefSize(100,20);
-        Button saveButton = new Button();
-        saveButton.setText("Save");
-        saveButton.setPrefSize(50,30);
-        saveButton.setOnAction(event -> {
-            String varTemp= varCountBox.getSelectionModel().getSelectedItem();
-            String constTemp = constCountBox.getSelectionModel().getSelectedItem();
-            boolean isRep = boolRepBox.isSelected();
-
-            try {
-                PrefSettings writer = new PrefWriter();
-                writer.writeValues(varTemp,constTemp,isRep?"1":"0");
-                start(event);
-            } catch (Exception exception) {
-                exception.printStackTrace();
-            }
-        });
-        PrefSettings reader = new PrefReader();
-        ArrayList<String> settings = reader.readValues();
-        selectionGrid.add(varCountBox,0,0);
-        selectionGrid.add(constCountBox,1,0);
-        selectionGrid.add(boolRepBox,0,1);
-        selectionGrid.setVgap(20);
-        Contents.getChildren().addAll(selectionGrid,saveButton);
-        root.getChildren().add(Contents);
-        varCountBox.getSelectionModel().select(settings.get(0));
-        constCountBox.getSelectionModel().select((settings.get(1)));
-        boolRepBox.setSelected(!settings.get(2).equals("0"));
-        varCountBox.setEditable(true);
-        constCountBox.setEditable(true);
-        Scene scene = new Scene(root, root.getPrefWidth(), root.getPrefHeight());
-        stage.setScene(scene);
+        stage.setTitle("Configure game");
+        stage.setScene(new Scene(root));
         stage.show();
     }
 

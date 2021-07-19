@@ -1,14 +1,10 @@
 package sample.GameStack;
-
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.scene.control.*;
 import javafx.scene.paint.Color;
 import sample.SolverStack.*;
-
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
-
 
 public class GameTime extends GameBoard {
     // GameTime class handles variables during gameplay
@@ -37,9 +33,7 @@ public class GameTime extends GameBoard {
                 case 6 -> initSolver = new Thread(() -> aiSolver = new HexaSolver(GameInProgress));
                 case 4 -> initSolver = new Thread(() -> aiSolver = new QuattroSolver(GameInProgress));
             }
-        //System.out.println(varCount);
         initSolver.start();
-        //System.out.println(initSolver.isAlive());
         entryBar = new ToolBar[2];
         initGuessButtonFunction();
         initOptionButtonFunction();
@@ -68,70 +62,50 @@ public class GameTime extends GameBoard {
     private void initOptionButtonFunction(){
         List<String> tempList = Arrays.asList("Clear","AI","Clue");
         if(!isWithinLimits()){
-            tempList = Arrays.asList("Clear");
+            tempList = Collections.singletonList("Clear");
         }
         optionButtons = new Button[tempList.size()];
         for(int i = 0; i < tempList.size(); i++){
             optionButtons[i] = new Button(tempList.get(i));
-            switch (i){
-                case 0:
-                    optionButtons[i].setOnAction(event -> {
-                        if(!endOfGame) {
-                            String filler = " ";
-                            for (int j = 0; j < GameInProgress.numberOfColumns; j++) {
-                                filler = filler.concat("*  ");
-                            }
-                            answerTexts[GameInProgress.currentTurn].setText(filler);
-                            GameInProgress.iterator = 0;
+            switch (i) {
+                case 0 -> optionButtons[i].setOnAction(event -> {
+                    if (!endOfGame) {
+                        String filler = " ";
+                        for (int j = 0; j < GameInProgress.numberOfColumns; j++) {
+                            filler = filler.concat("*  ");
                         }
-                    });
-                    break;
-
-                case 1:
-                    optionButtons[i].setOnAction(event -> {
-                        if(!endOfGame && !initSolver.isAlive()) {
-                            resetGame();
-                            isAI = true;
-                            //MiniSolver instanceSolver = theRightSolver(GameInProgress.numberOfColumns);
-                            for (int i1 = 0; i1 < GameInProgress.numberOfGuesses - 1; i1++) {
+                        answerTexts[GameInProgress.currentTurn].setText(filler);
+                        GameInProgress.iterator = 0;
+                    }
+                });
+                case 1 -> optionButtons[i].setOnAction(event -> {
+                    if (!endOfGame && !initSolver.isAlive()) {
+                        resetGame();
+                        isAI = true;
+                        //MiniSolver instanceSolver = theRightSolver(GameInProgress.numberOfColumns);
+                        for (int i1 = 0; i1 < GameInProgress.numberOfGuesses - 1; i1++) {
                             int[] guess = aiSolver.rowGuesser();
                             for (int entry : guess) {
                                 addEntry(entry - 1);
                             }
                             if (GameInProgress.victory)
                                 break;
-                            }
                         }
-                    });
-                    break;
-                case 2:
-                    optionButtons[i].setOnAction(event -> {
-                        showClues = true;
-                        String temp = "Clues from the AI";
-                        for(int k = 0; k < infoText.getText().length() - temp.length(); k++)
-                            temp = temp.concat(" ");
-                        temp = temp.concat("\nshow up here");
-                        infoText.setText(temp);
-                    });
-                    break;
+                    }
+                });
+                case 2 -> optionButtons[i].setOnAction(event -> {
+                    showClues = true;
+                    String temp = "Clues from the AI";
+                    for (int k = 0; k < infoText.getText().length() - temp.length(); k++)
+                        temp = temp.concat(" ");
+                    temp = temp.concat("\nshow up here");
+                    infoText.setText(temp);
+                });
             }
         }
     }
     public boolean isEndOfGame(){
         return endOfGame;
-    }
-
-    public void showAnswerPopUp(){
-        Alert alert = new Alert((Alert.AlertType.NONE));
-        alert.setAlertType(Alert.AlertType.INFORMATION);
-        String answerStr = "";
-        for(int k = 0; k < GameInProgress.numberOfColumns; k++){
-            answerStr = answerStr.concat(GameInProgress.answer[k] + " ");
-        }
-        alert.setTitle("Shhh...");
-        alert.setContentText("Answer: " + answerStr);
-        alert.showAndWait();
-        GameInProgress.isScam = true;
     }
 
     public void addEntry(int finalI){
@@ -148,7 +122,7 @@ public class GameTime extends GameBoard {
                 else{
                     temp.append(GameInProgress.currentEntry[k] > 9 ? "" : " ");
                 }
-                temp.append(String.valueOf(GameInProgress.currentEntry[k]));
+                temp.append(GameInProgress.currentEntry[k]);
             }
             while(k < GameInProgress.numberOfColumns){
                 temp.append("  *");
@@ -179,123 +153,62 @@ public class GameTime extends GameBoard {
                 for (; k < redCount + whiteCount; k++) {
                     boxes[k][GameInProgress.currentTurn].setFill(Color.LIGHTGRAY);
                 }
-                if (GameInProgress.victory) {
-                    Alert alert = new Alert((Alert.AlertType.NONE));
-
-                    alert.setAlertType(Alert.AlertType.INFORMATION);
-                    if(isAI){
-                        alert.setTitle("Guess what");
-                        alert.setContentText("I WIN !!");
-                    }
-                    else if (GameInProgress.isScam) {
-                        alert.setAlertType(Alert.AlertType.WARNING);
-                        alert.setTitle("Sus");
-                        alert.setContentText("Breach detected");
-                    }
-                    else if(showClues){
-                        alert.setTitle("You won!");
-                        alert.setContentText("You're welcome for the help :)");
-                    }
-
-                    else {
-                        alert.setTitle("Congratulations");
-                        alert.setContentText("You WIN !!");
-                    }
+                if (GameInProgress.victory || GameInProgress.currentTurn == numberOfGuesses - 1) {
                     endOfGame = true;
-                    alert.showAndWait();
-                } else if (GameInProgress.currentTurn == numberOfGuesses - 1) {
-                    endOfGame = true;
-                    Alert alert = new Alert((Alert.AlertType.NONE));
-                    alert.setAlertType(Alert.AlertType.INFORMATION);
-                    String answerStr = "";
-                    for (int x = 0; x < GameInProgress.numberOfColumns; x++) {
-                        answerStr = answerStr.concat(GameInProgress.answer[x] + " ");
-                    }
-                    alert.setTitle("Uh oh...");
-                    alert.setContentText("Out of turns :(\n Answer- " + answerStr);
-                    alert.showAndWait();
+                    showEndOfGameMessage(GameInProgress.victory, isAI, showClues);
                 }
             }
         }
     }
     public void backSpace(){
-        String temp = "";
+        StringBuilder temp = new StringBuilder();
         int k;
         if(GameInProgress.iterator > 0 && GameInProgress.iterator != GameInProgress.numberOfColumns){
             if(GameInProgress.iterator > 1) {
                 for (k = 0; k < GameInProgress.iterator - 1; k++) {
                     if (k > 0) {
-                        temp += GameInProgress.currentEntry[k] > 9 ? " " : "  ";
+                        temp.append(GameInProgress.currentEntry[k] > 9 ? " " : "  ");
                     } else {
-                        temp += GameInProgress.currentEntry[k] > 9 ? "" : " ";
+                        temp.append(GameInProgress.currentEntry[k] > 9 ? "" : " ");
                     }
-                    temp += String.valueOf(GameInProgress.currentEntry[k]);
+                    temp.append(GameInProgress.currentEntry[k]);
                 }
                 while (k < GameInProgress.numberOfColumns) {
-                    temp += "  *";
+                    temp.append("  *");
                     k++;
                 }
-                temp += "  ";
+                temp.append("  ");
             }
             else {
-                temp = " ";
-                for(int i = 0; i < GameInProgress.numberOfColumns; i++)
-                    temp += "*  ";
+                temp = new StringBuilder(" ");
+                temp.append("*  ".repeat(Math.max(0, GameInProgress.numberOfColumns)));
             }
-            answerTexts[GameInProgress.currentTurn].setText(temp);
+            answerTexts[GameInProgress.currentTurn].setText(temp.toString());
             GameInProgress.iterator--;
 
         }
     }
     public void addPseudoEntry(int finalI){
-        String temp = "";
+        StringBuilder temp = new StringBuilder();
         int k;
         if(!endOfGame) {
             //Output formatting statements
             GameInProgress.appendEntry(finalI);
             for (k = 0; k < GameInProgress.iterator; k++) {
                 if (k > 0) {
-                    temp += GameInProgress.currentEntry[k] > 9 ? " " : "  ";
+                    temp.append(GameInProgress.currentEntry[k] > 9 ? " " : "  ");
                 } else {
-                    temp += GameInProgress.currentEntry[k] > 9 ? "" : " ";
+                    temp.append(GameInProgress.currentEntry[k] > 9 ? "" : " ");
                 }
-                temp += String.valueOf(GameInProgress.currentEntry[k]);
+                temp.append(GameInProgress.currentEntry[k]);
             }
             while (k < GameInProgress.numberOfColumns) {
-                temp += "  *";
+                temp.append("  *");
                 k++;
             }
-            temp += "  ";
+            temp.append("  ");
             GameInProgress.iterator--;
-            answerTexts[GameInProgress.currentTurn].setText(temp);
+            answerTexts[GameInProgress.currentTurn].setText(temp.toString());
         }
-    }
-    void resetGame(){
-        String filler = " ";
-        for(int j = 0; j < GameInProgress.numberOfColumns; j++){
-            filler = filler.concat("*  ");
-        }
-        for(int i = 0; i < numberOfGuesses; i++){
-            answerTexts[i].setText(filler);
-        }
-
-        for(int i = 0; i < GameInProgress.numberOfColors; i++){
-            buttons[i] = new Button();
-            buttons[i].setText(Integer.toString(i + 1));
-            int finalI = i;
-            buttons[i].setOnAction(new EventHandler<ActionEvent>() {
-                @Override
-                public void handle(ActionEvent event) {
-                    addEntry(finalI);
-                }
-            });
-        }
-
-        for(int i = 0; i < numberOfGuesses ; i++){
-            for(int j = 0; j < GameInProgress.numberOfColumns; j++){
-                boxes[j][i].setFill(Color.GRAY);
-            }
-        }
-        GameInProgress.resetEntry();
     }
 }

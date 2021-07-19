@@ -3,8 +3,6 @@ package sample.SolverStack;
 import sample.GameStack.ColorComplex;
 import sample.GameStack.GameRecord;
 import sample.BetaSolver.*;
-
-import java.awt.*;
 import java.util.ArrayList;
 import java.util.Arrays;
 

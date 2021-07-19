@@ -1,6 +1,7 @@
 package sample.GameStack;
 
 import javafx.geometry.Insets;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonBar;
 import javafx.scene.control.ToolBar;
@@ -12,7 +13,7 @@ import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 
-abstract class GameBoard{
+public class GameBoard{
     //GameBoard class handles variables which draw the board
     VBox grid;
     int numberOfGuesses;
@@ -122,5 +123,68 @@ abstract class GameBoard{
         for(int i = 0; i < constantCount; i++){
             buttons[i] = new Button();
         }
+    }
+    public void showAnswerPopUp(){
+        Alert alert = new Alert((Alert.AlertType.NONE));
+        alert.setAlertType(Alert.AlertType.INFORMATION);
+        String answerStr = "";
+        for(int k = 0; k < GameInProgress.numberOfColumns; k++){
+            answerStr = answerStr.concat(GameInProgress.answer[k] + " ");
+        }
+        alert.setTitle("Shhh...");
+        alert.setContentText("Answer: " + answerStr);
+        alert.showAndWait();
+        GameInProgress.isScam = true;
+    }
+
+    public void showEndOfGameMessage(boolean isVictory, boolean isAI, boolean showClues){
+        Alert alert = new Alert((Alert.AlertType.NONE));
+
+        alert.setAlertType(Alert.AlertType.INFORMATION);
+        if(isVictory){
+            if(isAI){
+                alert.setTitle("Guess what");
+                alert.setContentText("I WIN !!");
+            }
+            else if (GameInProgress.isScam) {
+                alert.setAlertType(Alert.AlertType.WARNING);
+                alert.setTitle("Sus");
+                alert.setContentText("Breach detected");
+            }
+            else if(showClues){
+                alert.setTitle("You won!");
+                alert.setContentText("You're welcome for the help :)");
+            }
+
+            else {
+                alert.setTitle("Congratulations");
+                alert.setContentText("You WIN !!");
+            }
+        } else {
+            String answerStr = "";
+            for (int x = 0; x < GameInProgress.numberOfColumns; x++) {
+                answerStr = answerStr.concat(GameInProgress.answer[x] + " ");
+            }
+            alert.setTitle("Uh oh...");
+            alert.setContentText("Out of turns :(\n Answer- " + answerStr);
+        }
+        alert.showAndWait();
+    }
+
+    void resetGame(){
+        String filler = " ";
+        for(int j = 0; j < GameInProgress.numberOfColumns; j++){
+            filler = filler.concat("*  ");
+        }
+        for(int i = 0; i < numberOfGuesses; i++){
+            answerTexts[i].setText(filler);
+        }
+
+        for(int i = 0; i < numberOfGuesses ; i++){
+            for(int j = 0; j < GameInProgress.numberOfColumns; j++){
+                boxes[j][i].setFill(Color.GRAY);
+            }
+        }
+        GameInProgress.resetEntry();
     }
 }

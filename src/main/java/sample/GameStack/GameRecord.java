@@ -5,7 +5,7 @@ public class GameRecord extends ColorComplex{
     ColorComplex c = new ColorComplex();
     int currentTurn = 0;
     int[] currentEntry;
-    int[] answer;
+    protected int[] answer;
     public final int numberOfColumns;
     public final int numberOfColors;
     public final int numberOfGuesses;
