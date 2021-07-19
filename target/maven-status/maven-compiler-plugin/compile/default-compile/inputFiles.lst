@@ -1,8 +1,8 @@
+/Users/nitin/IdeaProjects/FXMasterMind/src/main/java/sample/ConfigPage.java
 /Users/nitin/IdeaProjects/FXMasterMind/src/main/java/sample/GameStack/ColorComplex.java
 /Users/nitin/IdeaProjects/FXMasterMind/src/main/java/sample/BetaSolver/InitLooper.java
 /Users/nitin/IdeaProjects/FXMasterMind/src/main/java/sample/BetaSolver/EliminationLooper.java
 /Users/nitin/IdeaProjects/FXMasterMind/src/main/java/sample/Controller.java
-/Users/nitin/IdeaProjects/FXMasterMind/src/main/java/sample/GameStack/ColourComplex.java
 /Users/nitin/IdeaProjects/FXMasterMind/src/main/java/sample/BetaSolver/Looper.java
 /Users/nitin/IdeaProjects/FXMasterMind/src/main/java/sample/SolverStack/OctaSolver.java
 /Users/nitin/IdeaProjects/FXMasterMind/src/main/java/sample/PrefStack/PrefSettings.java
@@ -14,6 +14,7 @@
 /Users/nitin/IdeaProjects/FXMasterMind/src/main/java/sample/BetaSolver/NNestedForLoop.java
 /Users/nitin/IdeaProjects/FXMasterMind/src/main/java/sample/PrefStack/PrefReader.java
 /Users/nitin/IdeaProjects/FXMasterMind/src/main/java/sample/GameStack/Solver.java
+/Users/nitin/IdeaProjects/FXMasterMind/src/main/java/sample/ThreadQueue/OrderlyThreads.java
 /Users/nitin/IdeaProjects/FXMasterMind/src/main/java/sample/GameStack/GameBoard.java
 /Users/nitin/IdeaProjects/FXMasterMind/src/main/java/sample/Main.java
 /Users/nitin/IdeaProjects/FXMasterMind/src/main/java/sample/SolverStack/MiniSolver.java

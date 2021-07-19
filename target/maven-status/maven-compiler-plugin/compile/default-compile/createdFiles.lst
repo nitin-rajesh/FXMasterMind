@@ -2,8 +2,8 @@ sample/PrefStack/PrefSettings.class
 sample/GameStack/GameTime$1.class
 sample/HelpMenu.class
 sample/BetaSolver/Tensor.class
+sample/ConfigPage.class
 sample/BetaSolver/EliminationLooper.class
-sample/GameStack/ColourComplex.class
 sample/PrefStack/PrefReader.class
 sample/Controller.class
 sample/BetaSolver/Looper.class
@@ -13,7 +13,7 @@ sample/SolverStack/MiniSolver.class
 sample/SolverStack/InfinitySolver.class
 sample/BetaSolver/NNestedForLoop.class
 sample/GameStack/ColorComplex.class
-sample/GameStack/GameTime$2.class
+sample/ThreadQueue/OrderlyThreads.class
 sample/BetaSolver/InitLooper.class
 sample/GameStack/GameRecord.class
 sample/SolverStack/QuattroSolver.class
