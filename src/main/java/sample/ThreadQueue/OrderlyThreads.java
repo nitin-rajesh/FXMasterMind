@@ -2,13 +2,35 @@ package sample.ThreadQueue;
 import java.util.concurrent.*;
 
 public class OrderlyThreads {
-    ExecutorService QueueOfThreads;
-    OrderlyThreads(){
-        QueueOfThreads = new ThreadPoolExecutor(1,1024,0L,TimeUnit.MILLISECONDS,
-                new LinkedBlockingQueue<Runnable>());
+    BlockingQueue<Runnable> runnableBlockingQueue;
+    Thread queueRunner;
+    public OrderlyThreads(){
+        runnableBlockingQueue = new LinkedBlockingQueue<>();
     }
 
-    void AddThread(Runnable runnableTask){
+    public void AddThread(Runnable runnableTask) throws InterruptedException {
+        //System.out.println("Thread added");
+        runnableBlockingQueue.put(runnableTask);
+    }
 
+    public void initQueue() {
+        queueRunner = new Thread(() -> {
+            Thread runner;
+            while(true){
+                try {
+                    runner = new Thread(runnableBlockingQueue.take());
+                    runner.start();
+                    runner.join();
+                } catch (InterruptedException ignored) { }
+            }
+        });
+        queueRunner.setDaemon(true);
+        queueRunner.start();
+    }
+
+    public void stopThreads(){
+        try{
+        queueRunner.interrupt();
+        }catch (Exception ignored){}
     }
 }

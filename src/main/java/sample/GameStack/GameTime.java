@@ -1,26 +1,35 @@
 package sample.GameStack;
+import javafx.application.Platform;
 import javafx.scene.control.*;
 import javafx.scene.paint.Color;
 import sample.SolverStack.*;
+import sample.ThreadQueue.OrderlyThreads;
+
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
 public class GameTime extends GameBoard {
     // GameTime class handles variables during gameplay
-    Thread initSolver;
-    Thread initGuesser;
+    Runnable initSolver;
     MiniSolver aiSolver;
-    boolean endOfGame;
+
+    OrderlyThreads solverThreads;
+
+    Runnable endOfGameMessage;
+
+    volatile boolean endOfGame;
     boolean isAI;
     boolean showClues;
     String clueArray;
-    public GameTime(int varCount, int constCount, boolean isRepeat){
+    public GameTime(int varCount, int constCount, boolean isRepeat) {
         super(varCount,constCount,isRepeat);
         endOfGame = false;
         isAI = false;
         showClues = false;
 
+        solverThreads = new OrderlyThreads();
+        solverThreads.initQueue();
         initSolver = new Thread(new Runnable() {
             @Override
             public void run() {
@@ -29,15 +38,23 @@ public class GameTime extends GameBoard {
         });
         if(isWithinLimits())
             switch (varCount) {
-                case 8 -> initSolver = new Thread(() -> aiSolver = new OctaSolver(GameInProgress));
-                case 6 -> initSolver = new Thread(() -> aiSolver = new HexaSolver(GameInProgress));
-                case 4 -> initSolver = new Thread(() -> aiSolver = new QuattroSolver(GameInProgress));
+                case 8 -> initSolver = () -> aiSolver = new OctaSolver(GameInProgress);
+                case 6 -> initSolver = () -> aiSolver = new HexaSolver(GameInProgress);
+                case 4 -> initSolver = () -> aiSolver = new QuattroSolver(GameInProgress);
             }
-        initSolver.start();
+        try{
+            solverThreads.AddThread(initSolver);
+        }catch (InterruptedException e){
+            System.out.println("Could not add thread");
+        }
         entryBar = new ToolBar[2];
         initGuessButtonFunction();
         initOptionButtonFunction();
 
+        endOfGameMessage = () -> {
+            while (!endOfGame) Thread.onSpinWait();
+            showEndOfGameMessage(GameInProgress.victory, isAI, showClues);
+        };
     }
 
     boolean isWithinLimits(){
@@ -56,9 +73,10 @@ public class GameTime extends GameBoard {
         for(int i = 0; i < GameInProgress.numberOfColors; i++){
             buttons[i].setText(Integer.toString(i + 1));
             int finalI = i;
-            buttons[i].setOnAction(event -> addEntry(finalI));
+            buttons[i].setOnAction(event -> {if(!isAI) addEntry(finalI);});
         }
     }
+
     private void initOptionButtonFunction(){
         List<String> tempList = Arrays.asList("Clear","AI","Clue");
         if(!isWithinLimits()){
@@ -79,17 +97,25 @@ public class GameTime extends GameBoard {
                     }
                 });
                 case 1 -> optionButtons[i].setOnAction(event -> {
-                    if (!endOfGame && !initSolver.isAlive()) {
+                    if (!endOfGame) {
                         resetGame();
                         isAI = true;
                         //MiniSolver instanceSolver = theRightSolver(GameInProgress.numberOfColumns);
                         for (int i1 = 0; i1 < GameInProgress.numberOfGuesses - 1; i1++) {
-                            int[] guess = aiSolver.rowGuesser();
-                            for (int entry : guess) {
-                                addEntry(entry - 1);
+                            try {
+                                solverThreads.AddThread(() -> {
+                                    int[] guess = aiSolver.rowGuesser();
+                                    for (int entry : guess) {
+                                        addEntry(entry - 1);
+                                    }
+                                });
+                            } catch (InterruptedException e) {
+                                System.out.println("AI thread exception");
                             }
-                            if (GameInProgress.victory)
+                            if (GameInProgress.victory){
+                                endOfGame = true;
                                 break;
+                            }
                         }
                     }
                 });
@@ -108,7 +134,7 @@ public class GameTime extends GameBoard {
         return endOfGame;
     }
 
-    public void addEntry(int finalI){
+    public void addEntry(int finalI)  {
         if(!endOfGame){
             GameInProgress.appendEntry(finalI + 1);
             //System.out.println(finalI + 1);
@@ -130,19 +156,20 @@ public class GameTime extends GameBoard {
             }
             temp.append("  ");
             answerTexts[GameInProgress.currentTurn].setText(temp.toString());
-            if(showClues && GameInProgress.currentTurn > 0 && !initSolver.isAlive())
+            if(showClues && GameInProgress.currentTurn > 0)
                 infoText.setText(clueArray + "\nTry this");
             if (GameInProgress.iterator == GameInProgress.numberOfColumns) {
                 //System.out.println(aiSolver.rowGuesser(GameInProgress.currentTurn));
-                if(!isAI && isWithinLimits() && !initSolver.isAlive()){
-                    if(initGuesser == null || !initGuesser.isAlive()) {
-                        initGuesser = new Thread(() -> {
+                if(!isAI && isWithinLimits()){
+                    try{
+                    solverThreads.AddThread(() -> {
                             clueArray = Arrays.toString(aiSolver.rowGuesser(GameInProgress.currentTurn));
                             //System.out.println(clueArray);
                             if (showClues)
                                 infoText.setText(clueArray + "\nTry this");
                         });
-                        initGuesser.start();
+                    }catch (InterruptedException e){
+                        System.out.println("Clue thread not added");
                     }
                 }
                 int redCount = GameInProgress.countReds();
@@ -153,13 +180,14 @@ public class GameTime extends GameBoard {
                 for (; k < redCount + whiteCount; k++) {
                     boxes[k][GameInProgress.currentTurn].setFill(Color.LIGHTGRAY);
                 }
-                if (GameInProgress.victory || GameInProgress.currentTurn == numberOfGuesses - 1) {
+                if ((GameInProgress.victory || GameInProgress.currentTurn == numberOfGuesses - 1)) {
                     endOfGame = true;
-                    showEndOfGameMessage(GameInProgress.victory, isAI, showClues);
+                    Platform.runLater(endOfGameMessage);
                 }
             }
         }
     }
+
     public void backSpace(){
         StringBuilder temp = new StringBuilder();
         int k;
@@ -210,5 +238,8 @@ public class GameTime extends GameBoard {
             GameInProgress.iterator--;
             answerTexts[GameInProgress.currentTurn].setText(temp.toString());
         }
+    }
+    public void endGame(){
+        solverThreads.stopThreads();
     }
 }

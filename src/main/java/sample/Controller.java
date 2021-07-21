@@ -83,6 +83,7 @@ public class Controller implements EventListener {
                     exception.printStackTrace();
                 }
             }
+            instance.endGame();
         });
         upperMenu.getButtons().add(exitButton);
         borderPane.setTop(upperMenu);
