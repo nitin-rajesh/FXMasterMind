@@ -21,6 +21,7 @@ public class OrderlyThreads {
                     runner = new Thread(runnableBlockingQueue.take());
                     runner.start();
                     runner.join();
+                    Thread.sleep(200);
                 } catch (InterruptedException ignored) { }
             }
         });
