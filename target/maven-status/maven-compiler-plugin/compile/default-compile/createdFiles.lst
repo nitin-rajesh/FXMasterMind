@@ -12,6 +12,7 @@ sample/GameStack/GameTime.class
 sample/SolverStack/MiniSolver.class
 sample/SolverStack/InfinitySolver.class
 sample/BetaSolver/NNestedForLoop.class
+Launcher.class
 sample/GameStack/ColorComplex.class
 sample/ThreadQueue/OrderlyThreads.class
 sample/BetaSolver/InitLooper.class
