@@ -9,23 +9,23 @@
 
 <AnchorPane prefHeight="207.0" prefWidth="281.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sample.ConfigPage">
    <children>
-      <Text layoutX="25.0" layoutY="48.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Configure">
+      <Text layoutX="25.0" layoutY="48.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Configure" AnchorPane.bottomAnchor="152.89599609375" AnchorPane.leftAnchor="25.0" AnchorPane.rightAnchor="146.48388671875" AnchorPane.topAnchor="22.67431640625">
          <font>
             <Font name="DIN Alternate Bold" size="27.0" />
          </font>
       </Text>
-      <Text layoutX="26.0" layoutY="88.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Column count">
+      <Text layoutX="26.0" layoutY="88.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Column count" AnchorPane.bottomAnchor="116.046875" AnchorPane.leftAnchor="26.0" AnchorPane.rightAnchor="163.166015625" AnchorPane.topAnchor="73.953125">
          <font>
             <Font size="14.0" />
          </font>
       </Text>
-      <Text layoutX="160.0" layoutY="88.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Number count">
+      <Text layoutX="160.0" layoutY="87.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Number count" AnchorPane.bottomAnchor="117.046875" AnchorPane.leftAnchor="160.0" AnchorPane.rightAnchor="26.8349609375" AnchorPane.topAnchor="73.46484375">
          <font>
             <Font size="14.0" />
          </font>
       </Text>
       <CheckBox fx:id="boolRepBox" layoutX="26.0" layoutY="146.0" mnemonicParsing="false" text="Enable repetitions" />
-      <ComboBox fx:id="varCountBox" editable="true" layoutX="25.0" layoutY="103.0" prefHeight="25.0" prefWidth="94.0" />
+      <ComboBox fx:id="varCountBox" editable="true" layoutX="25.0" layoutY="103.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="25.0" prefWidth="94.0" />
       <ComboBox fx:id="constCountBox" editable="true" layoutX="160.0" layoutY="103.0" prefHeight="25.0" prefWidth="94.0" />
       <Button layoutX="212.0" layoutY="164.0" mnemonicParsing="false" onAction="#saveButton" prefHeight="31.0" prefWidth="55.0" text="Save">
          <font>

@@ -171,6 +171,10 @@ public class GameBoard{
         alert.showAndWait();
     }
 
+    public int getVariableCount(){
+        return variableCount;
+    }
+
     void resetGame(){
         String filler = " ";
         for(int j = 0; j < GameInProgress.numberOfColumns; j++){

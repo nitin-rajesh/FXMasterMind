@@ -1,5 +1,7 @@
 package sample;
 
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXMLLoader;
@@ -37,8 +39,7 @@ public class Controller implements EventListener {
         stage = (Stage) ((Node) e.getSource()).getScene().getWindow();
         BorderPane borderPane = new BorderPane();   //Main border pane to align all the widgets
         ScrollPane playArea = new ScrollPane();
-        HBox playWidgets = new HBox();
-        HBox.setHgrow(playWidgets,Priority.ALWAYS);
+        BorderPane playWidgets = new BorderPane();
         //Grid of squares
         VBox grid = instance.drawBoxGrid();
         grid.setSpacing(5);
@@ -48,9 +49,12 @@ public class Controller implements EventListener {
         playArea.setPrefHeight(Screen.getPrimary().getVisualBounds().getHeight()/2);
         //Grid of text boxes for guess status
         VBox textGrid = instance.drawTextFields();
+        Separator gap = new Separator();
         textGrid.setSpacing(81);
         textGrid.setPadding(new Insets(52,20,20,20));
-        playWidgets.getChildren().addAll(textGrid,grid);
+        playWidgets.setLeft(textGrid);
+        playWidgets.setRight(grid);
+        playWidgets.setCenter(gap);
         //Add widgets to scroll pane
         playArea.setContent(playWidgets);
         //Grid of guess buttons
@@ -141,7 +145,15 @@ public class Controller implements EventListener {
             }
             acceptKeyStroke = true;
         });
+        scene.widthProperty().addListener((observableValue, number, t1) -> {
+            baseBar.setPrefWidth(t1.doubleValue());
+            gap.setPrefWidth(t1.doubleValue() - textGrid.getWidth() - grid.getWidth() - 15);
+        });
         stage.setScene(scene);
+
+        scene.heightProperty().addListener((observableValue, number, t1)->{
+            playArea.setPrefHeight(playArea.getHeight() + t1.doubleValue() - number.doubleValue());
+        });
         stage.show();
     }
 
@@ -169,10 +181,18 @@ public class Controller implements EventListener {
     }
 
     @FXML
-    public void helpPage() throws IOException {
-        Parent root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("/help_menu_p1.fxml")));
+    public void helpPage(ActionEvent e) throws IOException {
+        FXMLLoader loader = new FXMLLoader(Objects.requireNonNull(getClass().getResource("/help_menu_p1.fxml")));
+        Parent root = loader.load();
         helpStage.setTitle("Help page");
         Scene scene = new Scene(root);
+        sample.HelpMenu helpMenu = loader.getController();
+        scene.widthProperty().addListener((observableValue, number, t1) ->
+            helpMenu.baseBar.setPrefWidth(t1.doubleValue())
+        );
+        scene.heightProperty().addListener((observableValue, number, t1) ->
+            helpMenu.baseBar.setLayoutY(t1.doubleValue() - helpMenu.baseBar.getHeight())
+        );
         helpStage.setScene(scene);
         helpStage.show();
     }
