@@ -3,6 +3,16 @@ _A logic enhancement initiative_
 
 ## How to play the game
 
+### For platform specific jar files with JavaFX bundled 
+
+Download the appropriate .jar file from the Releases section.
+
+For platform dependent jars, make sure you have OpenJDK 16
+Linux and Mac typically support double click to run.
+To run on terminal/cmd, use ```java -jar FXMAsterMind.jar ```
+
+### To run the cross platform .jar
+
 #### Step 1: Download the .jar file
 
 The '**target**' forlder contains FXMasterMind-1.0-SNAPSHOT.jar
