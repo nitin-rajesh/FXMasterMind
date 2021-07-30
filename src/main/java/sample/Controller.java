@@ -31,19 +31,19 @@ public class Controller implements EventListener {
     CheckBox boolRepBox = new CheckBox();
     @FXML
     public void switchScene(ActionEvent e) throws IOException {
-        //System.out.println("Start");
+        stage = (Stage) ((Node) e.getSource()).getScene().getWindow();
+
         PrefSettings reader = new PrefReader();
         ArrayList<String> settings = reader.readValues();
         instance = new GameTime(Integer.parseInt(settings.get(0)),Integer.parseInt((settings.get(1))), !settings.get(2).equals("0"));
         AnchorPane root = new AnchorPane();
-        stage = (Stage) ((Node) e.getSource()).getScene().getWindow();
         BorderPane borderPane = new BorderPane();   //Main border pane to align all the widgets
         ScrollPane playArea = new ScrollPane();
         BorderPane playWidgets = new BorderPane();
         //Grid of squares
-        VBox grid = instance.drawBoxGrid();
-        grid.setSpacing(5);
-        grid.setPadding(new Insets(5, 5, 0, 5));
+        VBox boxGrid = instance.drawBoxGrid();
+        boxGrid.setSpacing(5);
+        boxGrid.setPadding(new Insets(5, 5, 0, 5));
         playArea.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
         playArea.setVbarPolicy(ScrollPane.ScrollBarPolicy.ALWAYS);
         playArea.setPrefHeight(Screen.getPrimary().getVisualBounds().getHeight()/2);
@@ -53,7 +53,7 @@ public class Controller implements EventListener {
         textGrid.setSpacing(81);
         textGrid.setPadding(new Insets(52,20,20,20));
         playWidgets.setLeft(textGrid);
-        playWidgets.setRight(grid);
+        playWidgets.setRight(boxGrid);
         playWidgets.setCenter(gap);
         //Add widgets to scroll pane
         playArea.setContent(playWidgets);
@@ -145,15 +145,19 @@ public class Controller implements EventListener {
             }
             acceptKeyStroke = true;
         });
-        scene.widthProperty().addListener((observableValue, number, t1) -> {
-            baseBar.setPrefWidth(t1.doubleValue());
-            gap.setPrefWidth(t1.doubleValue() - textGrid.getWidth() - grid.getWidth() - 15);
-        });
-        stage.setScene(scene);
 
-        scene.heightProperty().addListener((observableValue, number, t1)->{
-            playArea.setPrefHeight(playArea.getHeight() + t1.doubleValue() - number.doubleValue());
+        //setting the scene
+        stage.setScene(scene);
+        stage.hide();
+        gap.setPrefWidth(scene.getWidth() - textGrid.getWidth() - boxGrid.getWidth() - 15);
+        scene.widthProperty().addListener((observableValue, number, t1) -> {
+            baseBar.setPrefWidth((double)observableValue.getValue());
+            gap.setPrefWidth(gap.getPrefWidth() + t1.doubleValue() - number.doubleValue());
         });
+
+        scene.heightProperty().addListener((observableValue, number, t1)->
+            playArea.setPrefHeight(playArea.getHeight() + t1.doubleValue() - number.doubleValue())
+        );
         stage.show();
     }
 
