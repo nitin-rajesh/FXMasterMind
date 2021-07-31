@@ -158,6 +158,7 @@ public class Controller implements EventListener {
         scene.heightProperty().addListener((observableValue, number, t1)->
             playArea.setPrefHeight(playArea.getHeight() + t1.doubleValue() - number.doubleValue())
         );
+        stage.setTitle("FXMasterMind");
         stage.show();
     }
 
